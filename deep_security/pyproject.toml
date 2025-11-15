@@ -46,6 +46,7 @@ dependencies = [
     "mcp>=1.9.4",
     "langchain-aws>=0.2.28",
     "pandas>=2.3.1",
+    "firebase-admin>=6.0.0",
 ]
 
 [project.optional-dependencies]

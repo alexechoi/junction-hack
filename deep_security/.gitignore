@@ -67,3 +67,5 @@ tmp/
 temp/
 
 .langgraph_api
+
+firebase_key.json

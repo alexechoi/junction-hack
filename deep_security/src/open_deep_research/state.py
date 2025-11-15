@@ -264,6 +264,7 @@ class AgentState(MessagesState):
     notes: Annotated[list[str], override_reducer] = []
     final_report: str  # JSON string
     structured_report: Optional[dict] = None  # Parsed structured report for easy access
+    original_query: Optional[str] = None
 
 class SupervisorState(TypedDict):
     """State for the supervisor that manages research tasks."""

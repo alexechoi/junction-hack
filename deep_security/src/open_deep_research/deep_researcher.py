@@ -146,14 +146,29 @@ async def write_research_brief(state: AgentState, config: RunnableConfig) -> Com
         .with_config(research_model_config)
     )
 
-    # Step 2: Generate structured research brief from user messages
+    # Step 2: Extract original query from messages for caching
+    messages = state.get("messages", [])
+    original_query = None
+    if not state.get("original_query"):
+        # Find the first user/human message content
+        for msg in messages:
+            if hasattr(msg, 'type') and msg.type in ['human', 'user']:
+                original_query = str(msg.content).strip()
+                break
+            elif isinstance(msg, HumanMessage):
+                original_query = str(msg.content).strip()
+                break
+    else:
+        original_query = state.get("original_query")
+
+    # Step 3: Generate structured research brief from user messages
     prompt_content = transform_messages_into_research_topic_prompt.format(
-        messages=get_buffer_string(state.get("messages", [])),
+        messages=get_buffer_string(messages),
         date=get_today_str()
     )
     response = await research_model.ainvoke([HumanMessage(content=prompt_content)])
 
-    # Step 3: Initialize supervisor with research brief and instructions
+    # Step 4: Initialize supervisor with research brief and instructions
     supervisor_system_prompt = lead_researcher_prompt.format(
         date=get_today_str(),
         max_concurrent_research_units=configurable.max_concurrent_research_units,
@@ -164,6 +179,7 @@ async def write_research_brief(state: AgentState, config: RunnableConfig) -> Com
         goto="research_supervisor",
         update={
             "research_brief": response.research_brief,
+            "original_query": original_query,  # Add original query for caching
             "supervisor_messages": {
                 "type": "override",
                 "value": [
@@ -619,7 +635,11 @@ async def final_report_generation(state: AgentState, config: RunnableConfig):
     """
     # Step 1: Import the structured output schema
     from open_deep_research.state import SecurityAssessmentReport
+    from open_deep_research.firestore_cache import save_to_cache
     import json
+    import logging
+
+    logger = logging.getLogger(__name__)
 
     # Step 2: Extract research data
     notes = state.get("notes", [])
@@ -671,6 +691,15 @@ async def final_report_generation(state: AgentState, config: RunnableConfig):
 
             # Also store as dict for easy access
             report_dict = structured_report.model_dump()
+
+            # Save to Firestore cache if original_query is available
+            original_query = state.get("original_query")
+            if original_query:
+                try:
+                    await save_to_cache(original_query, report_dict)
+                except Exception as e:
+                    # Log error but don't fail the request
+                    logger.error(f"Failed to cache report for query '{original_query}': {e}")
 
             # Return success with structured data
             return {
