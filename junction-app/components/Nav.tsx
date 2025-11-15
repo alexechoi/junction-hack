@@ -79,6 +79,12 @@ export default function Nav() {
                   Dashboard
                 </Link>
                 <Link
+                  href="/reports"
+                  className={`${linkTheme} rounded-full px-4 py-2 transition`}
+                >
+                  Reports
+                </Link>
+                <Link
                   href="/profile"
                   className={`${linkTheme} rounded-full px-4 py-2 transition`}
                 >
