@@ -4,7 +4,7 @@
 **"Security decisions in seconds"** - Aegis is an AI-powered security assessment platform that automates vendor trust evaluations. It generates instant, source-grounded reports with transparent trust scores, and includes an interactive chat agent to provide further insights and answer specific questions, enabling security teams to make fast, informed decisions.
 
 ## 🚀 Overview 
-![Structural Diagram](https://github.com/user-attachments/assets/d23e5034-869f-411f-9b26-beac3a536c44)
+![Structural Diagram](https://github.com/user-attachments/assets/809af12b-4972-4a44-8842-fdc46b70608d)
 Aegis consists of two main components:
  - **Web-Client** (```junction-app/```) - A next.js web application providing an easy to use interface to evaluate products, discuss the evaluation with an agent, and a vault giving oversight over prior scoring.
  - **Deep Research Agent** (```deep_security/```) - An agent based on OpenAi & Langgraph, utilizing various specialist API's to thoroughly investigate the product provided.   
@@ -106,9 +106,9 @@ LangGraph Studio UI available at the printed URL (default [http://127.0.0.1:2024
  3. Wire API route to call LangGraph service; secure with bearer tokens.
  4. Point frontend env vars to production endpoints.
 ## 🧪 Testing & Evaluation
-Frontend: ```npm run lint``` / ```npm run test``` (if configured) plus manual UI smoke tests.
-Backend: Run ```python tests/run_evaluate.py``` for Deep Research Bench; extract results via tests/extract_langsmith_data.py.
-Integration: Validate that Firestore entries appear when manual assessments are triggered (mock API route until backend is wired).
+ - Frontend: ```npm run lint``` / ```npm run test``` (if configured) plus manual UI smoke tests.
+ - Backend: Run ```python tests/run_evaluate.py``` for Deep Research Bench; extract results via tests/extract_langsmith_data.py.
+ - Integration: Validate that Firestore entries appear when manual assessments are triggered (mock API route until backend is wired).
 ## 🤝 Contributing
 Fork and branch (```git checkout -b feature/<name>```).
 Keep frontend TypeScript strict and follow existing Tailwind patterns.
