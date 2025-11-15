@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, Hammer } from "lucide-react";
 
 const stats = [
   {
@@ -45,8 +45,8 @@ export function Hero() {
       <div className="relative mx-auto max-w-7xl">
         <div className="max-w-5xl">
           <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/80 backdrop-blur-sm">
-            <Sparkles className="size-4 text-emerald-400" />
-            AI-powered security intelligence
+            <Hammer className="size-4 text-emerald-400" />
+            Built at the Junction Helsinki Hackathon 2025
           </div>
 
           <h1 className="mb-8 text-5xl leading-[0.95] tracking-tight md:text-7xl lg:text-8xl">
@@ -70,12 +70,6 @@ export function Hero() {
               Start assessment
               <ArrowRight className="ml-2 size-5 transition group-hover:translate-x-1" />
             </button>
-            <a
-              href="#demo"
-              className="flex h-14 items-center justify-center rounded-full border border-white/10 px-10 text-base text-zinc-300 transition hover:bg-white/5 hover:text-white"
-            >
-              View example report
-            </a>
           </div>
         </div>
 
