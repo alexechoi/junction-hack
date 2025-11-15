@@ -43,9 +43,21 @@ export default function DashboardPage() {
         throw new Error(data.error || "Failed to process request");
       }
 
-      // If entity was found in Firestore
+      // If entity/report was found in cache
       if (data.found) {
-        router.push(`/entity/${data.entity.id}`);
+        const reportId =
+          data.reportId ||
+          data.entity?.cacheId ||
+          data.entity?.cache_id ||
+          data.entity?.id ||
+          data.entityName?.toLowerCase();
+
+        if (reportId) {
+          router.push(`/reports/${encodeURIComponent(reportId)}`);
+          return;
+        }
+
+        console.warn("Research API indicated cached report but no report ID");
       } else {
         // Entity not found, open streaming modal
         setStreamingEntityName(data.entityName);
