@@ -182,9 +182,7 @@ export default function ReportsPage() {
                       <h3 className="text-2xl font-semibold">
                         {report.vendor}
                       </h3>
-                      <p className="text-sm text-white/60">
-                        {report.category}
-                      </p>
+                      <p className="text-sm text-white/60">{report.category}</p>
                     </div>
                     <div className="text-right">
                       <div className="text-4xl font-semibold text-white">
@@ -223,8 +221,8 @@ export default function ReportsPage() {
                         report.risk === "Low"
                           ? "border border-emerald-400/40 text-emerald-300"
                           : report.risk === "Elevated"
-                          ? "border border-yellow-400/40 text-yellow-300"
-                          : "border border-blue-400/40 text-blue-300"
+                            ? "border border-yellow-400/40 text-yellow-300"
+                            : "border border-blue-400/40 text-blue-300"
                       }`}
                     >
                       Risk: {report.risk}
