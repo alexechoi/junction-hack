@@ -3,107 +3,135 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
-
-interface UserData {
-  firstName: string;
-  lastName: string;
-  email: string;
-  lastLoggedIn: Date | { toDate?: () => Date };
-  lastLoggedInIp: string;
-  termsAccepted: boolean;
-  marketingAccepted: boolean;
-  createdAt: Date | { toDate?: () => Date };
-}
+import { ArrowUpRight, FileUp, Loader2, Upload } from "lucide-react";
 
 export default function DashboardPage() {
-  const { user, logout, getUserData } = useAuth();
+  const { user } = useAuth();
   const router = useRouter();
-  const [userData, setUserData] = useState<UserData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [query, setQuery] = useState("");
+  const [fileName, setFileName] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (!user) {
       router.push("/auth");
       return;
     }
+  }, [user, router]);
 
-    const fetchUserData = async () => {
-      const data = await getUserData(user.uid);
-      setUserData(data);
-      setLoading(false);
-    };
-
-    fetchUserData();
-  }, [user, router, getUserData]);
-
-  const handleLogout = async () => {
-    await logout();
-    router.push("/");
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!query.trim() && !fileName) return;
+    setIsSubmitting(true);
+    // Placeholder for API request
+    setTimeout(() => {
+      setIsSubmitting(false);
+    }, 1500);
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-gray-600">Loading...</div>
-      </div>
-    );
-  }
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    setFileName(file ? file.name : null);
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto">
-        <div className="bg-white shadow rounded-lg">
-          <div className="px-4 py-5 sm:p-6">
-            <h1 className="text-2xl font-bold text-gray-900 mb-6">Dashboard</h1>
+    <div className="min-h-screen bg-zinc-950 px-4 py-12 text-white sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-5xl space-y-10">
+        <section className="rounded-3xl border border-white/10 bg-zinc-900/60 p-8 shadow-2xl">
+          <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <div>
+              <p className="text-sm uppercase tracking-widest text-emerald-400">
+                Trust assessment
+              </p>
+              <h2 className="mt-2 text-3xl font-semibold tracking-tight">
+                Run a new analysis
+              </h2>
+              <p className="mt-2 text-white/60">
+                Enter a vendor/app name or upload a binary, installer, or config
+                file for inspection.
+              </p>
+            </div>
+            <button className="inline-flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm text-white/70 transition hover:border-white/30 hover:text-white">
+              View reports
+              <ArrowUpRight className="size-4" />
+            </button>
+          </div>
 
-            <div className="space-y-4">
-              <div>
-                <h2 className="text-lg font-medium text-gray-900 mb-4">
-                  Welcome back!
-                </h2>
-                <div className="bg-gray-50 p-4 rounded-md space-y-2">
-                  <p className="text-sm text-gray-600">
-                    <span className="font-medium">Email:</span> {user?.email}
-                  </p>
-                  {userData?.firstName && (
-                    <p className="text-sm text-gray-600">
-                      <span className="font-medium">Name:</span>{" "}
-                      {userData.firstName} {userData.lastName}
-                    </p>
-                  )}
-                  <p className="text-sm text-gray-600">
-                    <span className="font-medium">User ID:</span> {user?.uid}
-                  </p>
-                  {userData?.createdAt && (
-                    <p className="text-sm text-gray-600">
-                      <span className="font-medium">Member since:</span>{" "}
-                      {(() => {
-                        const dateValue =
-                          userData.createdAt instanceof Date
-                            ? userData.createdAt
-                            : (
-                                userData.createdAt as { toDate?: () => Date }
-                              ).toDate?.();
-                        return dateValue
-                          ? new Date(dateValue).toLocaleDateString()
-                          : "";
-                      })()}
-                    </p>
-                  )}
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="relative group">
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-emerald-500/30 to-blue-500/30 opacity-0 blur-xl transition group-focus-within:opacity-40" />
+              <div className="relative rounded-2xl border border-white/10 bg-black/30 p-1">
+                <textarea
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                  placeholder="e.g. Slack, notion.so, AWS S3, or describe the artifact you want assessed."
+                  className="h-40 w-full resize-none rounded-2xl border border-white/10 bg-black/50 p-6 text-lg text-white placeholder:text-white/40 focus:outline-none focus:ring-1 focus:ring-emerald-400"
+                />
+                <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/5 px-4 py-3 text-sm text-white/60">
+                  <span>
+                    We auto-enrich your query with SOC 2, CVE, and vendor intel.
+                  </span>
+                  <span className="rounded-full border border-white/10 px-3 py-1 text-xs uppercase tracking-widest text-white/50">
+                    Text input
+                  </span>
                 </div>
               </div>
-
-              <div className="pt-4">
-                <button
-                  onClick={handleLogout}
-                  className="w-full sm:w-auto bg-red-600 text-white hover:bg-red-700 px-6 py-2 rounded-md text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                >
-                  Sign Out
-                </button>
-              </div>
             </div>
-          </div>
-        </div>
+
+            <label
+              htmlFor="file-upload"
+              className="flex cursor-pointer flex-col gap-4 rounded-2xl border border-dashed border-white/20 bg-white/5 p-6 transition hover:border-white/40 hover:bg-white/10"
+            >
+              <div className="flex items-center gap-4">
+                <div className="flex size-12 items-center justify-center rounded-2xl bg-white/10">
+                  <Upload className="size-6 text-white/70" />
+                </div>
+                <div>
+                  <p className="text-lg font-medium text-white">
+                    Upload executable or package
+                  </p>
+                  <p className="text-sm text-white/60">
+                    .exe, .msi, .zip, .dmg, .pkg, .deb, .rpm (max 250MB)
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center justify-between text-sm text-white/60">
+                <span>{fileName ?? "No file selected"}</span>
+                <div className="flex items-center gap-2 text-emerald-400">
+                  <FileUp className="size-4" />
+                  <span>Attach file</span>
+                </div>
+              </div>
+              <input
+                id="file-upload"
+                type="file"
+                accept=".exe,.msi,.zip,.dmg,.pkg,.deb,.rpm"
+                onChange={handleFileChange}
+                className="hidden"
+              />
+            </label>
+
+            <div className="flex flex-wrap items-center gap-4">
+              <button
+                type="submit"
+                disabled={isSubmitting || (!query.trim() && !fileName)}
+                className="inline-flex h-14 items-center justify-center rounded-full bg-white px-8 text-base font-semibold text-zinc-950 transition hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="mr-2 size-5 animate-spin" />
+                    Processing
+                  </>
+                ) : (
+                  "Start assessment"
+                )}
+              </button>
+              <p className="text-sm text-white/60">
+                Average processing time: 2 minutes • 15+ sources cited
+              </p>
+            </div>
+          </form>
+        </section>
       </div>
     </div>
   );
