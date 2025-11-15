@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { User } from "lucide-react";
 
 export default function Nav() {
   const { user } = useAuth();
@@ -23,7 +24,8 @@ export default function Nav() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isLanding]);
 
-  const isDarkShell = isLanding || pathname?.startsWith("/dashboard");
+  // For now we will always go with the dark shell theme but this should be refactored later
+  const isDarkShell = true;
 
   const navTheme = isDarkShell
     ? scrolled && isLanding
@@ -69,12 +71,20 @@ export default function Nav() {
 
           <div className="flex items-center gap-3">
             {user ? (
-              <Link
-                href="/dashboard"
-                className={`${linkTheme} rounded-full px-4 py-2 transition`}
-              >
-                Dashboard
-              </Link>
+              <>
+                <Link
+                  href="/dashboard"
+                  className={`${linkTheme} rounded-full px-4 py-2 transition`}
+                >
+                  Dashboard
+                </Link>
+                <Link
+                  href="/profile"
+                  className={`${linkTheme} rounded-full px-4 py-2 transition`}
+                >
+                  <User className="size-4" />
+                </Link>
+              </>
             ) : (
               <Link
                 href="/auth"
