@@ -19,14 +19,43 @@ export default function DashboardPage() {
     }
   }, [user, router]);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!query.trim() && !fileName) return;
     setIsSubmitting(true);
-    // Placeholder for API request
-    setTimeout(() => {
+
+    try {
+      // Call the research API
+      const response = await fetch("/api/research", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ message: query }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to process request");
+      }
+
+      // If entity was found in Firestore
+      if (data.found) {
+        router.push(`/entity/${data.entity.id}`);
+      } else {
+        // Entity not found, need to trigger deep research
+        // Redirect to reports page while research is in progress
+        router.push("/reports");
+      }
+    } catch (error) {
+      console.error("Error submitting query:", error);
+      alert(
+        error instanceof Error ? error.message : "Failed to process request"
+      );
+    } finally {
       setIsSubmitting(false);
-    }, 1500);
+    }
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
