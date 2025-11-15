@@ -3,6 +3,7 @@
 from open_deep_research.tools.cve_tool import cve_search
 from open_deep_research.tools.observatory_tool import observatory_scan
 from open_deep_research.tools.reflection_tool import think_tool
+from open_deep_research.tools.safe_browsing_tool import safe_browsing_check
 from open_deep_research.tools.tavily_tool import tavily_search
 from open_deep_research.tools.virustotal_tool import virustotal_scan
 
@@ -10,6 +11,7 @@ __all__ = [
     "cve_search",
     "observatory_scan",
     "think_tool",
+    "safe_browsing_check",
     "tavily_search",
     "virustotal_scan",
 ]
