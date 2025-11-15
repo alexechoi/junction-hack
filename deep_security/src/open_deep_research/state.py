@@ -255,8 +255,6 @@ def override_reducer(current_value, new_value):
 class AgentInputState(MessagesState):
     """InputState is only 'messages'."""
 
-    original_query: Optional[str] = None
-
 class AgentState(MessagesState):
     """Main agent state containing messages and research data."""
 
