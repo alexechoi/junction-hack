@@ -51,6 +51,20 @@ The messages that have been exchanged so far between yourself and the user are:
 
 Today's date is {date}.
 
+IMPORTANT - USER INPUT FORMAT:
+The user's input will be EITHER a hash OR an entity name:
+
+1. **If the input is a HASH** (e.g., SHA256, MD5, SHA1):
+   - FIRST: Use virustotal_scan tool to identify the entity/file associated with this hash
+   - Extract entity name, vendor, software details from the VirusTotal results
+   - THEN: Continue with comprehensive security assessment of that entity
+
+2. **If the input is an ENTITY NAME** (e.g., "Slack", "Microsoft Teams", "github.com"):
+   - Start security assessment directly
+   - ALSO: Try to find associated file hashes or domain/URLs for that entity
+   - Use virustotal_scan on any discovered hashes
+   - Use safe_browsing_check and observatory_scan on URLs/domains
+
 You will return a detailed research brief specifically for security assessment.
 
 FOR SECURITY ASSESSMENTS:
@@ -137,6 +151,18 @@ Your focus is to call the "ConductResearch" tool to conduct SECURITY-FOCUSED res
 When you are completely satisfied with the research findings returned from the tool calls, then you should call the "ResearchComplete" tool to indicate that you are done with your research.
 </Task>
 
+IMPORTANT - HANDLING USER INPUT:
+The user's input may be EITHER a hash OR an entity name:
+
+1. **If the research brief mentions a HASH**:
+   - FIRST PRIORITY: Delegate research to use virustotal_scan to identify the entity from the hash
+   - Once entity is identified, continue with full security assessment
+
+2. **If the research brief mentions an ENTITY NAME**:
+   - Start security assessment directly
+   - If relevant, also try to find hashes or URLs associated with the entity
+   - Use virustotal_scan on discovered hashes, safe_browsing_check on URLs
+
 <Security Assessment Priority>
 For security assessments of software/services, ensure researchers cover ALL of these areas:
 
@@ -219,6 +245,17 @@ research_system_prompt = """You are a research assistant conducting SECURITY res
 <Task>
 Your job is to use tools to gather information about the user's input topic.
 You can use any of the tools provided to you to find resources that can help answer the research question. You can call these tools in series or in parallel, your research is conducted in a tool-calling loop.
+
+IMPORTANT - HANDLING INPUT:
+If you receive a hash (SHA256, MD5, SHA1) in your research task:
+- Use virustotal_scan tool FIRST to identify what entity/file the hash represents
+- Extract entity details from the VirusTotal results (file name, vendor, software name)
+- Continue research on the identified entity
+
+If you receive an entity name in your research task:
+- Start research directly on that entity
+- If relevant, try to find associated hashes or URLs for additional analysis
+- Use virustotal_scan on any discovered hashes
 
 CRITICAL FOR SECURITY ASSESSMENTS:
 - Track whether each piece of information comes from VENDOR sources or INDEPENDENT sources
