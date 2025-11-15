@@ -46,7 +46,7 @@ export function Hero() {
         <div className="max-w-5xl">
           <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/80 backdrop-blur-sm">
             <Hammer className="size-4 text-emerald-400" />
-            Built at the Junction Helsinki Hackathon 2025
+            Built at the Junction Helsinki Hackathon 2025🇫🇮
           </div>
 
           <h1 className="mb-8 text-5xl leading-[0.95] tracking-tight md:text-7xl lg:text-8xl">

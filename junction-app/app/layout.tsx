@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Hackathon App",
-  description: "Your hackathon scaffold app",
+  title: "Aegis",
+  description: "Aegis is a tool that helps you assess the security of your applications.",
 };
 
 export default function RootLayout({
