@@ -30,19 +30,33 @@ def _initialize_firebase_sync() -> Optional[firestore.Client]:
     global _db
 
     try:
-        # Look for firebase_key.json in the project root
-        # The module is in src/open_deep_research/, so go up two levels
-        module_dir = Path(__file__).parent
-        project_root = module_dir.parent.parent
-        credentials_path = project_root / "firebase_key.json"
-
-        if not credentials_path.exists():
-            logger.warning(f"Firebase credentials file not found at {credentials_path}")
-            return None
-
         # Initialize the Firebase app if not already initialized
         if not firebase_admin._apps:
-            cred = credentials.Certificate(str(credentials_path))
+            # Try to get credentials from environment variable first
+            firebase_credentials_json = os.getenv("FIREBASE_CREDENTIALS_JSON")
+
+            if firebase_credentials_json:
+                # Parse JSON from environment variable
+                import json
+                credentials_dict = json.loads(firebase_credentials_json)
+                cred = credentials.Certificate(credentials_dict)
+                logger.info("Firebase credentials loaded from FIREBASE_CREDENTIALS_JSON environment variable")
+            else:
+                # Fallback to file for local development
+                module_dir = Path(__file__).parent
+                project_root = module_dir.parent.parent
+                credentials_path = project_root / "firebase_key.json"
+
+                if not credentials_path.exists():
+                    logger.warning(
+                        "Firebase credentials not found. Set FIREBASE_CREDENTIALS_JSON environment variable "
+                        f"or provide firebase_key.json at {credentials_path}"
+                    )
+                    return None
+
+                cred = credentials.Certificate(str(credentials_path))
+                logger.info("Firebase credentials loaded from firebase_key.json file")
+
             firebase_admin.initialize_app(cred)
             logger.info("Firebase Admin SDK initialized successfully")
 
