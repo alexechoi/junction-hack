@@ -32,7 +32,7 @@ export function LandingFooter() {
                 >
                   <Icon className="size-5" />
                 </a>
-              )
+              ),
             )}
           </div>
         </div>

@@ -811,7 +811,9 @@ export default function ReportDetailPage(props: ReportDetailPageProps) {
                     </div>
 
                     <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-                      <h3 className="text-xl font-semibold">Privacy & compliance</h3>
+                      <h3 className="text-xl font-semibold">
+                        Privacy & compliance
+                      </h3>
                       <div className="mt-6 grid gap-6 md:grid-cols-3">
                         {[
                           "GDPR compliant (DPA available)",
@@ -1033,14 +1035,17 @@ export default function ReportDetailPage(props: ReportDetailPageProps) {
                     <p className="text-xs uppercase tracking-[0.3em] text-white/40">
                       CISO Copilot
                     </p>
-                    <p className="text-lg font-semibold">Ask follow-up questions</p>
+                    <p className="text-lg font-semibold">
+                      Ask follow-up questions
+                    </p>
                   </div>
                 </div>
 
                 <div className="mt-6 flex-1 space-y-4 overflow-y-auto pr-1">
                   {chatMessages.length === 0 && !isChatSending && (
                     <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-white/60">
-                      No conversation yet. Ask anything about this report to start.
+                      No conversation yet. Ask anything about this report to
+                      start.
                     </div>
                   )}
                   {chatMessages.map((message) => (
