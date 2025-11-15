@@ -16,9 +16,12 @@ import {
   ExternalLink,
   FileText,
   Info,
+  MessageCircle,
   Lock,
+  Send,
   Settings,
   Share2,
+  Sparkles,
   TrendingDown,
   Users,
 } from "lucide-react";
@@ -224,6 +227,36 @@ export default function ReportDetailPage(props: ReportDetailPageProps) {
   const { user } = useAuth();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("security");
+  const initialChat = [
+    {
+      id: "seed-1",
+      role: "copilot",
+      content:
+        "Need clarifications on this report? I can summarize controls, vendor claims, or risks.",
+      timestamp: "now",
+    },
+    {
+      id: "seed-2",
+      role: "ciso",
+      content: "Any open CVEs we should track in KEV?",
+      timestamp: "2m ago",
+    },
+    {
+      id: "seed-3",
+      role: "copilot",
+      content:
+        "No KEV entries for Slack in past 12 months. Last CVE was medium severity (patched in 48h).",
+      timestamp: "2m ago",
+    },
+  ];
+  const [chatMessages, setChatMessages] = useState(initialChat);
+  const [chatInput, setChatInput] = useState("");
+  const [isChatSending, setIsChatSending] = useState(false);
+  const suggestedQuestions = [
+    "Summarize deployment requirements for Slack.",
+    "Compare Slack vs. Teams trust scores.",
+    "What controls mitigate data residency concerns?",
+  ];
 
   useEffect(() => {
     if (!user) {
@@ -240,6 +273,35 @@ export default function ReportDetailPage(props: ReportDetailPageProps) {
       return "border-yellow-500/30 bg-yellow-500/20 text-yellow-300";
     }
     return "border-blue-500/30 bg-blue-500/20 text-blue-300";
+  };
+
+  const handleSend = (text?: string) => {
+    const message = (text ?? chatInput).trim();
+    if (!message) return;
+    setChatMessages((prev) => [
+      ...prev,
+      {
+        id: `ciso-${Date.now()}`,
+        role: "ciso",
+        content: message,
+        timestamp: "Just now",
+      },
+    ]);
+    setChatInput("");
+    setIsChatSending(true);
+
+    setTimeout(() => {
+      setChatMessages((prev) => [
+        ...prev,
+        {
+          id: `copilot-${Date.now()}`,
+          role: "copilot",
+          content: `I'll draft a follow-up covering "${message}". Expect a summary in the shared workspace shortly.`,
+          timestamp: "moments ago",
+        },
+      ]);
+      setIsChatSending(false);
+    }, 1200);
   };
 
   return (
@@ -367,7 +429,9 @@ export default function ReportDetailPage(props: ReportDetailPageProps) {
             </div>
           </section>
 
-          <section>
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">
+            <div className="space-y-8">
+              <section>
             <div className="flex flex-wrap gap-3 rounded-2xl border border-white/10 bg-white/5 p-1">
               {tabs.map((tab) => (
                 <button
@@ -883,6 +947,102 @@ export default function ReportDetailPage(props: ReportDetailPageProps) {
               Vendor-stated claims are labeled and corroborated when possible.
             </div>
           </section>
+            </div>
+            <aside className="rounded-3xl border border-white/10 bg-zinc-900/70 p-6 shadow-2xl lg:sticky lg:top-28">
+              <div className="flex items-center gap-3">
+                <div className="flex size-12 items-center justify-center rounded-2xl bg-white/10">
+                  <Sparkles className="size-5 text-emerald-300" />
+                </div>
+                <div>
+                  <p className="text-xs uppercase tracking-[0.3em] text-white/40">
+                    CISO Copilot
+                  </p>
+                  <p className="text-lg font-semibold">Follow-up briefing</p>
+                </div>
+              </div>
+
+              <div className="mt-6 max-h-[420px] space-y-4 overflow-y-auto pr-1">
+                {chatMessages.map((message) => (
+                  <div
+                    key={message.id}
+                    className={`rounded-2xl border p-4 text-sm leading-relaxed ${
+                      message.role === "copilot"
+                        ? "border-white/10 bg-white/5 text-white/80"
+                        : "border-emerald-500/30 bg-emerald-500/10 text-white"
+                    }`}
+                  >
+                    <div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wide text-white/40">
+                      {message.role === "copilot" ? (
+                        <>
+                          <Sparkles className="size-3 text-emerald-300" />
+                          Analyst
+                        </>
+                      ) : (
+                        <>
+                          <MessageCircle className="size-3 text-white/70" />
+                          You
+                        </>
+                      )}
+                      <span className="text-white/30">•</span>
+                      <span>{message.timestamp}</span>
+                    </div>
+                    <p>{message.content}</p>
+                  </div>
+                ))}
+                {isChatSending && (
+                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-white/60">
+                    Typing…
+                  </div>
+                )}
+              </div>
+
+              <div className="mt-6">
+                <p className="text-xs uppercase tracking-[0.3em] text-white/40">
+                  Suggested prompts
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {suggestedQuestions.map((prompt) => (
+                    <button
+                      key={prompt}
+                      type="button"
+                      onClick={() => handleSend(prompt)}
+                      className="rounded-full border border-white/10 px-3 py-1 text-xs text-white/70 transition hover:border-white/30 hover:text-white"
+                    >
+                      {prompt}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <form
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  handleSend();
+                }}
+                className="mt-6 space-y-3"
+              >
+                <label className="text-xs uppercase tracking-[0.3em] text-white/40">
+                  Ask a question
+                </label>
+                <div className="relative">
+                  <textarea
+                    value={chatInput}
+                    onChange={(event) => setChatInput(event.target.value)}
+                    rows={3}
+                    placeholder="e.g. Highlight any SOC 2 exceptions we should review."
+                    className="w-full rounded-2xl border border-white/10 bg-black/30 p-4 text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+                  />
+                  <button
+                    type="submit"
+                    disabled={isChatSending || !chatInput.trim()}
+                    className="absolute bottom-3 right-3 inline-flex items-center justify-center rounded-full bg-white/10 p-2 text-white transition hover:bg-white/20 disabled:opacity-40"
+                  >
+                    <Send className="size-4" />
+                  </button>
+                </div>
+              </form>
+            </aside>
+          </div>
         </div>
       </div>
     </div>

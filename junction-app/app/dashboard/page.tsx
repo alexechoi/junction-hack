@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
-import { FileUp, Loader2, Upload } from "lucide-react";
+import { FileUp, Loader, Upload } from "lucide-react";
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -121,7 +121,7 @@ export default function DashboardPage() {
               >
                 {isSubmitting ? (
                   <>
-                    <Loader2 className="mr-2 size-5 animate-spin" />
+                    <Loader className="mr-2 size-5 animate-spin" />
                     Processing
                   </>
                 ) : (
