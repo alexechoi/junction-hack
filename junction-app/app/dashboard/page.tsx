@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
-import { ArrowUpRight, FileUp, Loader2, Upload } from "lucide-react";
+import { FileUp, Loader2, Upload } from "lucide-react";
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -51,9 +51,11 @@ export default function DashboardPage() {
                 file for inspection.
               </p>
             </div>
-            <button className="inline-flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm text-white/70 transition hover:border-white/30 hover:text-white">
+            <button
+              onClick={() => router.push("/reports")}
+              className="inline-flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm text-white/70 transition hover:border-white/30 hover:text-white"
+            >
               View reports
-              <ArrowUpRight className="size-4" />
             </button>
           </div>
 
