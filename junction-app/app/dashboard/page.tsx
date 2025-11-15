@@ -54,7 +54,7 @@ export default function DashboardPage() {
     } catch (error) {
       console.error("Error submitting query:", error);
       alert(
-        error instanceof Error ? error.message : "Failed to process request"
+        error instanceof Error ? error.message : "Failed to process request",
       );
     } finally {
       setIsSubmitting(false);

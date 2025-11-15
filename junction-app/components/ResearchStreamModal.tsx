@@ -54,7 +54,7 @@ export default function ResearchStreamModal({
   const [sources, setSources] = useState<string[]>([]);
   const [trustScore, setTrustScore] = useState<number | null>(null);
   const [expandedSections, setExpandedSections] = useState<Set<string>>(
-    new Set() // Start with all sections collapsed
+    new Set(), // Start with all sections collapsed
   );
   const abortControllerRef = useRef<AbortController | null>(null);
   const eventsEndRef = useRef<HTMLDivElement>(null);
@@ -207,7 +207,7 @@ export default function ResearchStreamModal({
 
   const updatePhaseStatus = (
     phaseId: string,
-    status: "pending" | "active" | "complete"
+    status: "pending" | "active" | "complete",
   ) => {
     setPhases((prev) =>
       prev.map((phase) =>
@@ -217,8 +217,8 @@ export default function ResearchStreamModal({
               status,
               timestamp: status !== "pending" ? Date.now() : phase.timestamp,
             }
-          : phase
-      )
+          : phase,
+      ),
     );
   };
 
@@ -644,120 +644,130 @@ export default function ResearchStreamModal({
                 </div>
                 <div className="min-h-0 flex-1 overflow-y-auto p-4">
                   <div className="space-y-3">
-                    {parseBriefIntoSections(researchBrief).map((section, index) => (
-                      <div
-                        key={section.id}
-                        className="animate-in slide-in-from-bottom fade-in duration-500 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm transition-all hover:border-white/20"
-                        style={{ animationDelay: `${index * 100}ms` }}
-                      >
-                        <button
-                          onClick={() => toggleSection(section.id)}
-                          className="flex w-full items-center justify-between gap-3 p-4 text-left transition-colors hover:bg-white/5"
+                    {parseBriefIntoSections(researchBrief).map(
+                      (section, index) => (
+                        <div
+                          key={section.id}
+                          className="animate-in slide-in-from-bottom fade-in duration-500 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm transition-all hover:border-white/20"
+                          style={{ animationDelay: `${index * 100}ms` }}
                         >
-                          <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => toggleSection(section.id)}
+                            className="flex w-full items-center justify-between gap-3 p-4 text-left transition-colors hover:bg-white/5"
+                          >
+                            <div className="flex items-center gap-2">
+                              <div
+                                className={`flex size-8 shrink-0 items-center justify-center rounded-lg transition-all ${
+                                  expandedSections.has(section.id)
+                                    ? "bg-emerald-500/20 text-emerald-400"
+                                    : "bg-white/10 text-white/60"
+                                }`}
+                              >
+                                {index === 0 ? (
+                                  <FileSearch className="size-4" />
+                                ) : (
+                                  <div className="flex size-2 rounded-full bg-current" />
+                                )}
+                              </div>
+                              <h4 className="font-semibold text-white text-sm">
+                                {section.title}
+                              </h4>
+                            </div>
                             <div
-                              className={`flex size-8 shrink-0 items-center justify-center rounded-lg transition-all ${
+                              className={`shrink-0 transition-transform duration-300 ${
                                 expandedSections.has(section.id)
-                                  ? "bg-emerald-500/20 text-emerald-400"
-                                  : "bg-white/10 text-white/60"
+                                  ? "rotate-180"
+                                  : ""
                               }`}
                             >
-                              {index === 0 ? (
-                                <FileSearch className="size-4" />
-                              ) : (
-                                <div className="flex size-2 rounded-full bg-current" />
-                              )}
+                              <svg
+                                className="size-5 text-white/60"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M19 9l-7 7-7-7"
+                                />
+                              </svg>
                             </div>
-                            <h4 className="font-semibold text-white text-sm">
-                              {section.title}
-                            </h4>
-                          </div>
-                          <div
-                            className={`shrink-0 transition-transform duration-300 ${
-                              expandedSections.has(section.id) ? "rotate-180" : ""
-                            }`}
-                          >
-                            <svg
-                              className="size-5 text-white/60"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M19 9l-7 7-7-7"
-                              />
-                            </svg>
-                          </div>
-                        </button>
+                          </button>
 
-                        {expandedSections.has(section.id) && (
-                          <div className="animate-in slide-in-from-top fade-in duration-300 border-t border-white/10 p-4">
-                            <div className="space-y-3">
-                              {section.content.split("\n\n").map((paragraph, pIndex) => {
-                                // Check if it's a list item
-                                if (paragraph.trim().match(/^[-*•]\s/)) {
-                                  const items = paragraph
-                                    .split("\n")
-                                    .filter((line) => line.trim());
-                                  return (
-                                    <ul key={pIndex} className="space-y-2">
-                                      {items.map((item, iIndex) => (
-                                        <li
-                                          key={iIndex}
-                                          className="flex items-start gap-2 text-sm leading-relaxed text-white/80"
-                                        >
-                                          <span className="mt-2 flex size-1.5 shrink-0 rounded-full bg-emerald-400" />
-                                          <span>
-                                            {item.replace(/^[-*•]\s/, "").trim()}
-                                          </span>
-                                        </li>
-                                      ))}
-                                    </ul>
-                                  );
-                                }
+                          {expandedSections.has(section.id) && (
+                            <div className="animate-in slide-in-from-top fade-in duration-300 border-t border-white/10 p-4">
+                              <div className="space-y-3">
+                                {section.content
+                                  .split("\n\n")
+                                  .map((paragraph, pIndex) => {
+                                    // Check if it's a list item
+                                    if (paragraph.trim().match(/^[-*•]\s/)) {
+                                      const items = paragraph
+                                        .split("\n")
+                                        .filter((line) => line.trim());
+                                      return (
+                                        <ul key={pIndex} className="space-y-2">
+                                          {items.map((item, iIndex) => (
+                                            <li
+                                              key={iIndex}
+                                              className="flex items-start gap-2 text-sm leading-relaxed text-white/80"
+                                            >
+                                              <span className="mt-2 flex size-1.5 shrink-0 rounded-full bg-emerald-400" />
+                                              <span>
+                                                {item
+                                                  .replace(/^[-*•]\s/, "")
+                                                  .trim()}
+                                              </span>
+                                            </li>
+                                          ))}
+                                        </ul>
+                                      );
+                                    }
 
-                                // Check if it's a numbered list
-                                if (paragraph.trim().match(/^\d+\.\s/)) {
-                                  const items = paragraph
-                                    .split("\n")
-                                    .filter((line) => line.trim());
-                                  return (
-                                    <ol key={pIndex} className="space-y-2">
-                                      {items.map((item, iIndex) => (
-                                        <li
-                                          key={iIndex}
-                                          className="flex items-start gap-2 text-sm leading-relaxed text-white/80"
-                                        >
-                                          <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-emerald-500/20 text-xs font-semibold text-emerald-400">
-                                            {iIndex + 1}
-                                          </span>
-                                          <span>
-                                            {item.replace(/^\d+\.\s/, "").trim()}
-                                          </span>
-                                        </li>
-                                      ))}
-                                    </ol>
-                                  );
-                                }
+                                    // Check if it's a numbered list
+                                    if (paragraph.trim().match(/^\d+\.\s/)) {
+                                      const items = paragraph
+                                        .split("\n")
+                                        .filter((line) => line.trim());
+                                      return (
+                                        <ol key={pIndex} className="space-y-2">
+                                          {items.map((item, iIndex) => (
+                                            <li
+                                              key={iIndex}
+                                              className="flex items-start gap-2 text-sm leading-relaxed text-white/80"
+                                            >
+                                              <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-emerald-500/20 text-xs font-semibold text-emerald-400">
+                                                {iIndex + 1}
+                                              </span>
+                                              <span>
+                                                {item
+                                                  .replace(/^\d+\.\s/, "")
+                                                  .trim()}
+                                              </span>
+                                            </li>
+                                          ))}
+                                        </ol>
+                                      );
+                                    }
 
-                                // Regular paragraph
-                                return (
-                                  <p
-                                    key={pIndex}
-                                    className="text-sm leading-relaxed text-white/80"
-                                  >
-                                    {paragraph}
-                                  </p>
-                                );
-                              })}
+                                    // Regular paragraph
+                                    return (
+                                      <p
+                                        key={pIndex}
+                                        className="text-sm leading-relaxed text-white/80"
+                                      >
+                                        {paragraph}
+                                      </p>
+                                    );
+                                  })}
+                              </div>
                             </div>
-                          </div>
-                        )}
-                      </div>
-                    ))}
+                          )}
+                        </div>
+                      ),
+                    )}
                   </div>
                 </div>
               </div>
