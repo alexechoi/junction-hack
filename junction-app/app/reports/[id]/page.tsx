@@ -919,37 +919,48 @@ export default function ReportDetailPage(props: ReportDetailPageProps) {
                   {report.sources.map((source: any, index: number) => (
                     <div
                       key={`${source.source}-${index}`}
-                      className="flex flex-col gap-4 rounded-2xl border border-white/5 bg-black/30 p-4 text-sm text-white/70 md:flex-row md:items-center md:justify-between"
+                      className="rounded-2xl border border-white/5 bg-black/30 p-4 text-sm text-white/70"
                     >
-                      <div className="flex items-center gap-3">
-                        <span
-                          className={`rounded-full border px-3 py-1 text-xs uppercase tracking-wide ${
-                            source.type === "vendor"
-                              ? "border-blue-500/30 bg-blue-500/20 text-blue-200"
-                              : "border-emerald-500/30 bg-emerald-500/20 text-emerald-200"
-                          }`}
-                        >
-                          {source.type}
-                        </span>
-                        <span>{source.source}</span>
-                      </div>
-                      <div className="flex flex-wrap items-center gap-4 text-xs text-white/50">
-                        {source.date && <span>{source.date}</span>}
-                        {source.url && (
-                          <a
-                            href={
-                              source.url.startsWith("http")
-                                ? source.url
-                                : `https://${source.url}`
-                            }
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 text-white/60 transition hover:text-white"
+                      <div className="grid gap-4 md:grid-cols-[150px_minmax(0,1fr)_220px] md:items-center">
+                        <div className="flex items-center">
+                          <span
+                            className={`inline-flex h-8 w-full items-center justify-center rounded-full border px-3 text-xs uppercase tracking-wide ${
+                              source.type === "vendor"
+                                ? "border-blue-500/30 bg-blue-500/20 text-blue-200"
+                                : "border-emerald-500/30 bg-emerald-500/20 text-emerald-200"
+                            }`}
                           >
-                            {source.url}
-                            <ExternalLink className="size-3" />
-                          </a>
-                        )}
+                            {source.type}
+                          </span>
+                        </div>
+                        <div>
+                          <p className="font-medium text-white">{source.source}</p>
+                          {source.notes && (
+                            <p className="mt-1 text-xs text-white/60">{source.notes}</p>
+                          )}
+                        </div>
+                        <div className="flex flex-wrap items-center gap-3 text-xs text-white/50 md:justify-end">
+                          {source.date && (
+                            <span className="rounded-full border border-white/10 px-3 py-0.5 text-white/60">
+                              {source.date}
+                            </span>
+                          )}
+                          {source.url && (
+                            <a
+                              href={
+                                source.url.startsWith("http")
+                                  ? source.url
+                                  : `https://${source.url}`
+                              }
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 text-white/60 transition hover:text-white"
+                            >
+                              {source.url}
+                              <ExternalLink className="size-3" />
+                            </a>
+                          )}
+                        </div>
                       </div>
                     </div>
                   ))}
