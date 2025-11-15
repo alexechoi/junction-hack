@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { FileUp, Loader, Upload } from "lucide-react";
+import ResearchStreamModal from "@/components/ResearchStreamModal";
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -11,6 +12,8 @@ export default function DashboardPage() {
   const [query, setQuery] = useState("");
   const [fileName, setFileName] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showStreamModal, setShowStreamModal] = useState(false);
+  const [streamingEntityName, setStreamingEntityName] = useState("");
 
   useEffect(() => {
     if (!user) {
@@ -19,14 +22,48 @@ export default function DashboardPage() {
     }
   }, [user, router]);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!query.trim() && !fileName) return;
     setIsSubmitting(true);
-    // Placeholder for API request
-    setTimeout(() => {
+
+    try {
+      // Call the research API
+      const response = await fetch("/api/research", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ message: query }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to process request");
+      }
+
+      // If entity was found in Firestore
+      if (data.found) {
+        router.push(`/entity/${data.entity.id}`);
+      } else {
+        // Entity not found, open streaming modal
+        setStreamingEntityName(data.entityName);
+        setShowStreamModal(true);
+      }
+    } catch (error) {
+      console.error("Error submitting query:", error);
+      alert(
+        error instanceof Error ? error.message : "Failed to process request",
+      );
+    } finally {
       setIsSubmitting(false);
-    }, 1500);
+    }
+  };
+
+  const handleStreamComplete = () => {
+    // Redirect to reports page after streaming completes
+    router.push("/reports");
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -135,6 +172,14 @@ export default function DashboardPage() {
           </form>
         </section>
       </div>
+
+      {/* Research Stream Modal */}
+      <ResearchStreamModal
+        isOpen={showStreamModal}
+        onClose={() => setShowStreamModal(false)}
+        entityName={streamingEntityName}
+        onComplete={handleStreamComplete}
+      />
     </div>
   );
 }
