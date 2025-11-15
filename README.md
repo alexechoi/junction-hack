@@ -4,7 +4,7 @@
 **"Security decisions in seconds"** - Aegis is an AI-powered security assessment platform that automates vendor trust evaluations. It generates instant, source-grounded reports with transparent trust scores, and includes an interactive chat agent to provide further insights and answer specific questions, enabling security teams to make fast, informed decisions.
 
 ## 🚀 Overview 
-![Structural Diagram](https://github.com/user-attachments/assets/809af12b-4972-4a44-8842-fdc46b70608d)
+![Structural Diagram](https://github.com/user-attachments/assets/7266272e-81c7-4d69-935d-c50dfad74c58)
 Aegis consists of two main components:
  - **Web-Client** (```junction-app/```) - A next.js web application providing an easy to use interface to evaluate products, discuss the evaluation with an agent, and a vault giving oversight over prior scoring.
  - **Deep Research Agent** (```deep_security/```) - An agent based on OpenAi & Langgraph, utilizing various specialist API's to thoroughly investigate the product provided.   
@@ -110,11 +110,11 @@ LangGraph Studio UI available at the printed URL (default [http://127.0.0.1:2024
  - Backend: Run ```python tests/run_evaluate.py``` for Deep Research Bench; extract results via tests/extract_langsmith_data.py.
  - Integration: Validate that Firestore entries appear when manual assessments are triggered (mock API route until backend is wired).
 ## 🤝 Contributing
-Fork and branch (```git checkout -b feature/<name>```).
-Keep frontend TypeScript strict and follow existing Tailwind patterns.
-For backend changes, update ```configuration.py``` docs + README when adding config knobs.
-Add tests or LangSmith eval notes for new research behaviors.
-Submit PR with a concise summary and screenshots if UI-related.
+ 1. Fork and branch (```git checkout -b feature/<name>```).
+ 2. Keep frontend TypeScript strict and follow existing Tailwind patterns.
+ 3. For backend changes, update ```configuration.py``` docs + README when adding config knobs.
+ 4. Add tests or LangSmith eval notes for new research behaviors.
+ 5. Submit PR with a concise summary and screenshots if UI-related.
 ## 📄 License
 MIT – see LICENSE.
 ## 🙋 Support & Questions
