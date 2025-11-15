@@ -329,647 +329,638 @@ export default function ReportDetailPage(props: ReportDetailPageProps) {
       </div>
 
       <div className="px-6 py-10">
-        <div className="mx-auto max-w-6xl space-y-12">
-          <header className="space-y-8 rounded-3xl border border-white/10 bg-white/5 p-8">
-            <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
-              <div className="flex items-start gap-6">
-                <div className="flex size-20 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-purple-500 text-3xl shadow-xl">
-                  #️⃣
-                </div>
-                <div>
-                  <div className="flex flex-wrap items-center gap-3">
-                    <h1 className="text-4xl font-semibold tracking-tight">
-                      Slack Technologies, LLC
-                    </h1>
-                    <span className="rounded-full border border-blue-500/30 bg-blue-500/20 px-3 py-1 text-sm text-blue-100">
-                      Verified
-                    </span>
+        <div className="mx-auto max-w-6xl lg:grid lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-10">
+          <div className="space-y-12">
+            <header className="space-y-8 rounded-3xl border border-white/10 bg-white/5 p-8">
+              <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+                <div className="flex items-start gap-6">
+                  <div className="flex size-20 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-purple-500 text-3xl shadow-xl">
+                    #️⃣
                   </div>
-                  <p className="mt-1 text-white/60">slack.com</p>
-                  <p className="text-xs uppercase tracking-[0.4em] text-white/30">
-                    {params.id}
-                  </p>
-                  <div className="mt-3 flex flex-wrap gap-2 text-sm text-white/80">
-                    <span className="rounded-full border border-white/10 bg-white/10 px-3 py-1">
-                      SaaS Collaboration Platform
-                    </span>
-                    <span className="rounded-full border border-white/10 bg-white/10 px-3 py-1">
-                      Business Communication
-                    </span>
+                  <div>
+                    <div className="flex flex-wrap items-center gap-3">
+                      <h1 className="text-4xl font-semibold tracking-tight">
+                        Slack Technologies, LLC
+                      </h1>
+                      <span className="rounded-full border border-blue-500/30 bg-blue-500/20 px-3 py-1 text-sm text-blue-100">
+                        Verified
+                      </span>
+                    </div>
+                    <p className="mt-1 text-white/60">slack.com</p>
+                    <p className="text-xs uppercase tracking-[0.4em] text-white/30">
+                      {params.id}
+                    </p>
+                    <div className="mt-3 flex flex-wrap gap-2 text-sm text-white/80">
+                      <span className="rounded-full border border-white/10 bg-white/10 px-3 py-1">
+                        SaaS Collaboration Platform
+                      </span>
+                      <span className="rounded-full border border-white/10 bg-white/10 px-3 py-1">
+                        Business Communication
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="relative rounded-3xl border border-white/10 bg-white/5 p-8 text-center">
+                  <div className="text-7xl font-semibold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">
+                    82
+                  </div>
+                  <p className="mt-1 text-sm text-white/60">Trust score</p>
+                  <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1 text-xs uppercase tracking-wide text-emerald-300">
+                    <span className="size-1.5 rounded-full bg-emerald-300" />
+                    High confidence • 18 sources
                   </div>
                 </div>
               </div>
 
-              <div className="relative rounded-3xl border border-white/10 bg-white/5 p-8 text-center">
-                <div className="text-7xl font-semibold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">
-                  82
-                </div>
-                <p className="mt-1 text-sm text-white/60">Trust score</p>
-                <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1 text-xs uppercase tracking-wide text-emerald-300">
-                  <span className="size-1.5 rounded-full bg-emerald-300" />
-                  High confidence • 18 sources
-                </div>
-              </div>
-            </div>
-
-            <div className="grid gap-4 md:grid-cols-4">
-              {[
-                {
-                  icon: CheckCircle2,
-                  label: "Active certifications",
-                  value: "4",
-                },
-                {
-                  icon: AlertTriangle,
-                  label: "CVEs (12 months)",
-                  value: "3",
-                },
-                {
-                  icon: TrendingDown,
-                  label: "Vulnerability trend",
-                  value: "-23%",
-                },
-                {
-                  icon: Clock,
-                  label: "Avg. patch time",
-                  value: "4.2d",
-                },
-              ].map((stat) => (
-                <div
-                  key={stat.label}
-                  className="rounded-2xl border border-white/10 bg-black/30 p-5"
-                >
-                  <div className="mb-2 flex items-center gap-3 text-sm text-white/60">
-                    <stat.icon className="size-4 text-emerald-300" />
-                    {stat.label}
+              <div className="grid gap-4 md:grid-cols-4">
+                {[
+                  {
+                    icon: CheckCircle2,
+                    label: "Active certifications",
+                    value: "4",
+                  },
+                  {
+                    icon: AlertTriangle,
+                    label: "CVEs (12 months)",
+                    value: "3",
+                  },
+                  {
+                    icon: TrendingDown,
+                    label: "Vulnerability trend",
+                    value: "-23%",
+                  },
+                  {
+                    icon: Clock,
+                    label: "Avg. patch time",
+                    value: "4.2d",
+                  },
+                ].map((stat) => (
+                  <div
+                    key={stat.label}
+                    className="rounded-2xl border border-white/10 bg-black/30 p-5"
+                  >
+                    <div className="mb-2 flex items-center gap-3 text-sm text-white/60">
+                      <stat.icon className="size-4 text-emerald-300" />
+                      {stat.label}
+                    </div>
+                    <div className="text-2xl font-semibold">{stat.value}</div>
                   </div>
-                  <div className="text-2xl font-semibold">{stat.value}</div>
-                </div>
-              ))}
-            </div>
-          </header>
+                ))}
+              </div>
+            </header>
 
-          <section className="rounded-3xl border border-white/10 bg-gradient-to-br from-emerald-500/5 to-blue-500/5 p-8">
-            <div className="flex items-center gap-3 text-2xl font-semibold">
-              <FileText className="size-6" />
-              Executive summary
-            </div>
-            <p className="mt-4 text-lg leading-relaxed text-white/70">
-              Slack is a widely adopted enterprise collaboration platform with a
-              strong security posture. The platform maintains SOC 2 Type II and
-              ISO 27001 certifications, implements robust encryption standards,
-              and demonstrates a declining CVE trend. While generally secure,
-              teams should be aware of data residency considerations and
-              configure SSO/SAML properly.
-            </p>
-            <div className="mt-4 flex items-start gap-2 text-sm text-white/60">
-              <Info className="mt-0.5 size-4" />
-              Assessment generated on November 15, 2025 at 14:32 UTC. Cached
-              data may be up to 24 hours old.
-            </div>
-          </section>
+            <section className="rounded-3xl border border-white/10 bg-gradient-to-br from-emerald-500/5 to-blue-500/5 p-8">
+              <div className="flex items-center gap-3 text-2xl font-semibold">
+                <FileText className="size-6" />
+                Executive summary
+              </div>
+              <p className="mt-4 text-lg leading-relaxed text-white/70">
+                Slack is a widely adopted enterprise collaboration platform with
+                a strong security posture. The platform maintains SOC 2 Type II
+                and ISO 27001 certifications, implements robust encryption
+                standards, and demonstrates a declining CVE trend. While
+                generally secure, teams should be aware of data residency
+                considerations and configure SSO/SAML properly.
+              </p>
+              <div className="mt-4 flex items-start gap-2 text-sm text-white/60">
+                <Info className="mt-0.5 size-4" />
+                Assessment generated on November 15, 2025 at 14:32 UTC. Cached
+                data may be up to 24 hours old.
+              </div>
+            </section>
 
-          <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">
-            <div className="space-y-8">
-              <section>
-                <div className="flex flex-wrap gap-3 rounded-2xl border border-white/10 bg-white/5 p-1">
-                  {tabs.map((tab) => (
-                    <button
-                      key={tab.id}
-                      onClick={() => setActiveTab(tab.id)}
-                      className={`rounded-2xl px-4 py-2 text-sm transition ${
-                        activeTab === tab.id
-                          ? "bg-white/20 text-white"
-                          : "text-white/60 hover:text-white"
-                      }`}
-                    >
-                      {tab.label}
-                    </button>
-                  ))}
-                </div>
+            <section>
+              <div className="flex flex-wrap gap-3 rounded-2xl border border-white/10 bg-white/5 p-1">
+                {tabs.map((tab) => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`rounded-2xl px-4 py-2 text-sm transition ${
+                      activeTab === tab.id
+                        ? "bg-white/20 text-white"
+                        : "text-white/60 hover:text-white"
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
 
-                <div className="mt-8 space-y-6">
-                  {activeTab === "security" && (
-                    <>
-                      <div className="grid gap-6 md:grid-cols-2">
-                        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-                          <h3 className="mb-6 text-xl font-semibold">
-                            Key strengths
-                          </h3>
-                          <div className="space-y-4">
-                            {strengths.map((item) => (
-                              <div
-                                key={item.title}
-                                className="border-l-2 border-emerald-400 pl-4"
-                              >
-                                <div className="flex items-center justify-between">
-                                  <p className="text-sm font-medium">
-                                    {item.title}
-                                  </p>
-                                  <span
-                                    className={`rounded-full border px-2 py-0.5 text-xs uppercase tracking-wide ${
-                                      item.source === "vendor"
-                                        ? "border-blue-500/30 bg-blue-500/20 text-blue-200"
-                                        : "border-emerald-500/30 bg-emerald-500/20 text-emerald-200"
-                                    }`}
-                                  >
-                                    {item.source === "vendor"
-                                      ? "Vendor"
-                                      : "Independent"}
-                                  </span>
-                                </div>
-                                <p className="text-xs text-white/60">
-                                  {item.description}
+              <div className="mt-8 space-y-6">
+                {activeTab === "security" && (
+                  <>
+                    <div className="grid gap-6 md:grid-cols-2">
+                      <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+                        <h3 className="mb-6 text-xl font-semibold">
+                          Key strengths
+                        </h3>
+                        <div className="space-y-4">
+                          {strengths.map((item) => (
+                            <div
+                              key={item.title}
+                              className="border-l-2 border-emerald-400 pl-4"
+                            >
+                              <div className="flex items-center justify-between">
+                                <p className="text-sm font-medium">
+                                  {item.title}
                                 </p>
-                                <a
-                                  href="#"
-                                  className="mt-1 inline-flex items-center gap-1 text-xs text-white/50 transition hover:text-white/80"
+                                <span
+                                  className={`rounded-full border px-2 py-0.5 text-xs uppercase tracking-wide ${
+                                    item.source === "vendor"
+                                      ? "border-blue-500/30 bg-blue-500/20 text-blue-200"
+                                      : "border-emerald-500/30 bg-emerald-500/20 text-emerald-200"
+                                  }`}
                                 >
-                                  {item.link}
-                                  <ExternalLink className="size-3" />
-                                </a>
+                                  {item.source === "vendor"
+                                    ? "Vendor"
+                                    : "Independent"}
+                                </span>
                               </div>
-                            ))}
+                              <p className="text-xs text-white/60">
+                                {item.description}
+                              </p>
+                              <a
+                                href="#"
+                                className="mt-1 inline-flex items-center gap-1 text-xs text-white/50 transition hover:text-white/80"
+                              >
+                                {item.link}
+                                <ExternalLink className="size-3" />
+                              </a>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+                        <h3 className="mb-6 text-xl font-semibold">
+                          Considerations
+                        </h3>
+                        <div className="space-y-4">
+                          {considerations.map((item) => (
+                            <div
+                              key={item.title}
+                              className="border-l-2 border-yellow-400 pl-4"
+                            >
+                              <div className="flex items-center justify-between">
+                                <p className="text-sm font-medium">
+                                  {item.title}
+                                </p>
+                                <span
+                                  className={`rounded-full border px-2 py-0.5 text-xs uppercase tracking-wide ${severityBadge(item.severity)}`}
+                                >
+                                  {item.severity}
+                                </span>
+                              </div>
+                              <p className="text-xs text-white/60">
+                                {item.description}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+                      <h3 className="mb-6 flex items-center gap-2 text-xl font-semibold">
+                        <Building2 className="size-5" />
+                        Vendor reputation
+                      </h3>
+                      <div className="grid gap-6 md:grid-cols-3">
+                        <div>
+                          <p className="text-xs uppercase tracking-wide text-white/50">
+                            Company
+                          </p>
+                          <p className="mt-1 text-white/80">
+                            Salesforce, Inc. (acquired 2021)
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-xs uppercase tracking-wide text-white/50">
+                            Market presence
+                          </p>
+                          <p className="mt-1 text-white/80">
+                            20M+ DAU, Fortune 100 clients
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-xs uppercase tracking-wide text-white/50">
+                            Transparency
+                          </p>
+                          <div className="mt-1 inline-flex items-center gap-2 rounded-full border border-white/10 px-3 py-1 text-xs text-emerald-300">
+                            <CheckCircle2 className="size-3" />
+                            Public security documentation
                           </div>
                         </div>
-                        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-                          <h3 className="mb-6 text-xl font-semibold">
-                            Considerations
-                          </h3>
-                          <div className="space-y-4">
-                            {considerations.map((item) => (
-                              <div
-                                key={item.title}
-                                className="border-l-2 border-yellow-400 pl-4"
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                {activeTab === "compliance" && (
+                  <div className="grid gap-6 md:grid-cols-2">
+                    {compliance.map((cert) => (
+                      <div
+                        key={cert.cert}
+                        className="rounded-3xl border border-white/10 bg-white/5 p-6"
+                      >
+                        <div className="flex items-start justify-between">
+                          <p className="text-lg font-semibold">{cert.cert}</p>
+                          <span className="rounded-full border border-emerald-500/40 bg-emerald-500/10 px-2 py-0.5 text-xs uppercase tracking-wide text-emerald-200">
+                            Active
+                          </span>
+                        </div>
+                        <dl className="mt-4 space-y-2 text-sm text-white/70">
+                          <div className="flex justify-between">
+                            <dt className="text-white/50">Issued</dt>
+                            <dd>{cert.issued}</dd>
+                          </div>
+                          <div className="flex justify-between">
+                            <dt className="text-white/50">Expires</dt>
+                            <dd>{cert.expires}</dd>
+                          </div>
+                          <div className="flex justify-between">
+                            <dt className="text-white/50">Scope</dt>
+                            <dd className="text-right">{cert.scope}</dd>
+                          </div>
+                          <div className="flex justify-between">
+                            <dt className="text-white/50">Auditor</dt>
+                            <dd className="text-right">{cert.auditor}</dd>
+                          </div>
+                        </dl>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {activeTab === "vulnerabilities" && (
+                  <div className="space-y-6">
+                    <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-xl font-semibold">
+                          CVE history (past 12 months)
+                        </h3>
+                        <span className="inline-flex items-center gap-2 text-sm text-emerald-300">
+                          <TrendingDown className="size-4" />
+                          -23% vs previous year
+                        </span>
+                      </div>
+                      <div className="mt-6 space-y-4">
+                        {cves.map((cve) => (
+                          <div
+                            key={cve.id}
+                            className="rounded-2xl border border-white/10 p-6"
+                          >
+                            <div className="flex flex-wrap items-center gap-3">
+                              <p className="text-lg font-semibold">{cve.id}</p>
+                              <span
+                                className={`rounded-full border px-2 py-0.5 text-xs uppercase tracking-wide ${severityBadge(
+                                  cve.severity,
+                                )}`}
                               >
-                                <div className="flex items-center justify-between">
-                                  <p className="text-sm font-medium">
-                                    {item.title}
-                                  </p>
-                                  <span
-                                    className={`rounded-full border px-2 py-0.5 text-xs uppercase tracking-wide ${severityBadge(item.severity)}`}
-                                  >
-                                    {item.severity}
-                                  </span>
-                                </div>
+                                {cve.severity} • CVSS {cve.cvss}
+                              </span>
+                              <span className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-xs uppercase text-emerald-200">
+                                Patched
+                              </span>
+                            </div>
+                            <p className="mt-1 text-sm text-white/70">
+                              {cve.title}
+                            </p>
+                            <div className="mt-4 grid gap-4 text-xs text-white/60 md:grid-cols-2">
+                              <span>Published: {cve.published}</span>
+                              <span>Patched: {cve.patched}</span>
+                            </div>
+                            {!cve.kev && (
+                              <p className="mt-3 inline-flex items-center gap-2 text-xs text-white/50">
+                                <Info className="size-3" />
+                                Not listed in CISA KEV catalog
+                              </p>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                      <div className="mt-6 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-4 text-sm text-white/70">
+                        <CheckCircle2 className="mb-2 size-5 text-emerald-300" />
+                        No critical vulnerabilities in the last 12 months.
+                        Average patch time of 4.2 days demonstrates strong
+                        response.
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === "data" && (
+                  <div className="space-y-6">
+                    <div className="grid gap-6 md:grid-cols-2">
+                      <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+                        <h3 className="mb-6 flex items-center gap-2 text-xl font-semibold">
+                          <Lock className="size-5" />
+                          Encryption & storage
+                        </h3>
+                        <div className="space-y-4">
+                          {[
+                            {
+                              label: "Data in transit",
+                              value: "TLS 1.2+, perfect forward secrecy",
+                            },
+                            {
+                              label: "Data at rest",
+                              value: "AES-256 encryption",
+                            },
+                            {
+                              label: "Key management",
+                              value: "EKM available (Enterprise Grid)",
+                            },
+                            {
+                              label: "Backups",
+                              value: "Encrypted with separate keys",
+                            },
+                          ].map((item) => (
+                            <div
+                              key={item.label}
+                              className="flex items-start justify-between border-b border-white/5 pb-3 last:border-0"
+                            >
+                              <div>
+                                <p className="text-sm font-medium">
+                                  {item.label}
+                                </p>
                                 <p className="text-xs text-white/60">
-                                  {item.description}
+                                  {item.value}
                                 </p>
                               </div>
-                            ))}
-                          </div>
+                              <CheckCircle2 className="size-5 text-emerald-300" />
+                            </div>
+                          ))}
                         </div>
                       </div>
 
                       <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
                         <h3 className="mb-6 flex items-center gap-2 text-xl font-semibold">
-                          <Building2 className="size-5" />
-                          Vendor reputation
+                          <Database className="size-5" />
+                          Data residency & retention
                         </h3>
-                        <div className="grid gap-6 md:grid-cols-3">
-                          <div>
-                            <p className="text-xs uppercase tracking-wide text-white/50">
-                              Company
-                            </p>
-                            <p className="mt-1 text-white/80">
-                              Salesforce, Inc. (acquired 2021)
-                            </p>
-                          </div>
-                          <div>
-                            <p className="text-xs uppercase tracking-wide text-white/50">
-                              Market presence
-                            </p>
-                            <p className="mt-1 text-white/80">
-                              20M+ DAU, Fortune 100 clients
-                            </p>
-                          </div>
-                          <div>
-                            <p className="text-xs uppercase tracking-wide text-white/50">
-                              Transparency
-                            </p>
-                            <div className="mt-1 inline-flex items-center gap-2 rounded-full border border-white/10 px-3 py-1 text-xs text-emerald-300">
-                              <CheckCircle2 className="size-3" />
-                              Public security documentation
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </>
-                  )}
-
-                  {activeTab === "compliance" && (
-                    <div className="grid gap-6 md:grid-cols-2">
-                      {compliance.map((cert) => (
-                        <div
-                          key={cert.cert}
-                          className="rounded-3xl border border-white/10 bg-white/5 p-6"
-                        >
-                          <div className="flex items-start justify-between">
-                            <p className="text-lg font-semibold">{cert.cert}</p>
-                            <span className="rounded-full border border-emerald-500/40 bg-emerald-500/10 px-2 py-0.5 text-xs uppercase tracking-wide text-emerald-200">
-                              Active
-                            </span>
-                          </div>
-                          <dl className="mt-4 space-y-2 text-sm text-white/70">
-                            <div className="flex justify-between">
-                              <dt className="text-white/50">Issued</dt>
-                              <dd>{cert.issued}</dd>
-                            </div>
-                            <div className="flex justify-between">
-                              <dt className="text-white/50">Expires</dt>
-                              <dd>{cert.expires}</dd>
-                            </div>
-                            <div className="flex justify-between">
-                              <dt className="text-white/50">Scope</dt>
-                              <dd className="text-right">{cert.scope}</dd>
-                            </div>
-                            <div className="flex justify-between">
-                              <dt className="text-white/50">Auditor</dt>
-                              <dd className="text-right">{cert.auditor}</dd>
-                            </div>
-                          </dl>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {activeTab === "vulnerabilities" && (
-                    <div className="space-y-6">
-                      <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-                        <div className="flex items-center justify-between">
-                          <h3 className="text-xl font-semibold">
-                            CVE history (past 12 months)
-                          </h3>
-                          <span className="inline-flex items-center gap-2 text-sm text-emerald-300">
-                            <TrendingDown className="size-4" />
-                            -23% vs previous year
-                          </span>
-                        </div>
-                        <div className="mt-6 space-y-4">
-                          {cves.map((cve) => (
+                        <div className="space-y-4">
+                          {[
+                            {
+                              label: "Primary storage",
+                              value: "United States (AWS)",
+                              status: "info",
+                            },
+                            {
+                              label: "EU residency",
+                              value: "Available with Enterprise Grid",
+                              status: "info",
+                            },
+                            {
+                              label: "Retention",
+                              value: "Configurable (1 day – unlimited)",
+                              status: "good",
+                            },
+                            {
+                              label: "Portability",
+                              value: "Export tooling available",
+                              status: "good",
+                            },
+                          ].map((item) => (
                             <div
-                              key={cve.id}
-                              className="rounded-2xl border border-white/10 p-6"
+                              key={item.label}
+                              className="flex items-start justify-between border-b border-white/5 pb-3 last:border-0"
                             >
-                              <div className="flex flex-wrap items-center gap-3">
-                                <p className="text-lg font-semibold">
-                                  {cve.id}
+                              <div>
+                                <p className="text-sm font-medium">
+                                  {item.label}
                                 </p>
-                                <span
-                                  className={`rounded-full border px-2 py-0.5 text-xs uppercase tracking-wide ${severityBadge(
-                                    cve.severity,
-                                  )}`}
-                                >
-                                  {cve.severity} • CVSS {cve.cvss}
-                                </span>
-                                <span className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-xs uppercase text-emerald-200">
-                                  Patched
-                                </span>
-                              </div>
-                              <p className="mt-1 text-sm text-white/70">
-                                {cve.title}
-                              </p>
-                              <div className="mt-4 grid gap-4 text-xs text-white/60 md:grid-cols-2">
-                                <span>Published: {cve.published}</span>
-                                <span>Patched: {cve.patched}</span>
-                              </div>
-                              {!cve.kev && (
-                                <p className="mt-3 inline-flex items-center gap-2 text-xs text-white/50">
-                                  <Info className="size-3" />
-                                  Not listed in CISA KEV catalog
+                                <p className="text-xs text-white/60">
+                                  {item.value}
                                 </p>
+                              </div>
+                              {item.status === "good" ? (
+                                <CheckCircle2 className="size-5 text-emerald-300" />
+                              ) : (
+                                <Info className="size-5 text-blue-300" />
                               )}
                             </div>
                           ))}
                         </div>
-                        <div className="mt-6 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-4 text-sm text-white/70">
-                          <CheckCircle2 className="mb-2 size-5 text-emerald-300" />
-                          No critical vulnerabilities in the last 12 months.
-                          Average patch time of 4.2 days demonstrates strong
-                          response.
-                        </div>
                       </div>
                     </div>
-                  )}
 
-                  {activeTab === "data" && (
-                    <div className="space-y-6">
-                      <div className="grid gap-6 md:grid-cols-2">
-                        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-                          <h3 className="mb-6 flex items-center gap-2 text-xl font-semibold">
-                            <Lock className="size-5" />
-                            Encryption & storage
-                          </h3>
-                          <div className="space-y-4">
-                            {[
-                              {
-                                label: "Data in transit",
-                                value: "TLS 1.2+, perfect forward secrecy",
-                              },
-                              {
-                                label: "Data at rest",
-                                value: "AES-256 encryption",
-                              },
-                              {
-                                label: "Key management",
-                                value: "EKM available (Enterprise Grid)",
-                              },
-                              {
-                                label: "Backups",
-                                value: "Encrypted with separate keys",
-                              },
-                            ].map((item) => (
-                              <div
-                                key={item.label}
-                                className="flex items-start justify-between border-b border-white/5 pb-3 last:border-0"
-                              >
-                                <div>
-                                  <p className="text-sm font-medium">
-                                    {item.label}
-                                  </p>
-                                  <p className="text-xs text-white/60">
-                                    {item.value}
-                                  </p>
-                                </div>
-                                <CheckCircle2 className="size-5 text-emerald-300" />
-                              </div>
-                            ))}
+                    <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+                      <h3 className="text-xl font-semibold">
+                        Privacy & compliance
+                      </h3>
+                      <div className="mt-6 grid gap-6 md:grid-cols-3">
+                        {[
+                          "GDPR compliant (DPA available)",
+                          "CCPA compliant",
+                          "Standard Contractual Clauses",
+                        ].map((item) => (
+                          <div key={item} className="flex items-center gap-3">
+                            <CheckCircle2 className="size-5 text-emerald-300" />
+                            <p className="text-sm text-white/70">{item}</p>
                           </div>
-                        </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
 
-                        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-                          <h3 className="mb-6 flex items-center gap-2 text-xl font-semibold">
-                            <Database className="size-5" />
-                            Data residency & retention
-                          </h3>
-                          <div className="space-y-4">
-                            {[
-                              {
-                                label: "Primary storage",
-                                value: "United States (AWS)",
-                                status: "info",
-                              },
-                              {
-                                label: "EU residency",
-                                value: "Available with Enterprise Grid",
-                                status: "info",
-                              },
-                              {
-                                label: "Retention",
-                                value: "Configurable (1 day – unlimited)",
-                                status: "good",
-                              },
-                              {
-                                label: "Portability",
-                                value: "Export tooling available",
-                                status: "good",
-                              },
-                            ].map((item) => (
-                              <div
-                                key={item.label}
-                                className="flex items-start justify-between border-b border-white/5 pb-3 last:border-0"
-                              >
-                                <div>
-                                  <p className="text-sm font-medium">
-                                    {item.label}
-                                  </p>
-                                  <p className="text-xs text-white/60">
-                                    {item.value}
-                                  </p>
-                                </div>
-                                {item.status === "good" ? (
-                                  <CheckCircle2 className="size-5 text-emerald-300" />
-                                ) : (
-                                  <Info className="size-5 text-blue-300" />
-                                )}
-                              </div>
-                            ))}
-                          </div>
+                {activeTab === "deployment" && (
+                  <div className="space-y-6">
+                    <div className="grid gap-6 md:grid-cols-2">
+                      <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+                        <h3 className="mb-6 flex items-center gap-2 text-xl font-semibold">
+                          <Users className="size-5" />
+                          Access controls
+                        </h3>
+                        <div className="space-y-4 text-sm text-white/80">
+                          {[
+                            { feature: "SSO / SAML", plan: "Business+" },
+                            { feature: "2FA / MFA", plan: "All plans" },
+                            {
+                              feature: "Session management",
+                              plan: "All plans",
+                            },
+                            {
+                              feature: "SCIM provisioning",
+                              plan: "Enterprise Grid",
+                            },
+                            {
+                              feature: "Role-based access",
+                              plan: "Business+",
+                            },
+                            {
+                              feature: "Guest access controls",
+                              plan: "All plans",
+                            },
+                          ].map((item) => (
+                            <div
+                              key={item.feature}
+                              className="flex items-center justify-between"
+                            >
+                              <span>{item.feature}</span>
+                              <span className="rounded-full border border-white/10 px-2 py-0.5 text-xs text-white/60">
+                                {item.plan}
+                              </span>
+                            </div>
+                          ))}
                         </div>
                       </div>
 
                       <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-                        <h3 className="text-xl font-semibold">
-                          Privacy & compliance
+                        <h3 className="mb-6 flex items-center gap-2 text-xl font-semibold">
+                          <Settings className="size-5" />
+                          Admin controls
                         </h3>
-                        <div className="mt-6 grid gap-6 md:grid-cols-3">
+                        <div className="space-y-4 text-sm text-white/80">
                           {[
-                            "GDPR compliant (DPA available)",
-                            "CCPA compliant",
-                            "Standard Contractual Clauses",
+                            { feature: "Audit logs", plan: "Business+" },
+                            {
+                              feature: "DLP integration",
+                              plan: "Enterprise Grid",
+                            },
+                            {
+                              feature: "eDiscovery API",
+                              plan: "Enterprise Grid",
+                            },
+                            {
+                              feature: "Retention policies",
+                              plan: "Business+",
+                            },
+                            { feature: "Admin analytics", plan: "Business+" },
+                            { feature: "App management", plan: "All plans" },
                           ].map((item) => (
-                            <div key={item} className="flex items-center gap-3">
-                              <CheckCircle2 className="size-5 text-emerald-300" />
-                              <p className="text-sm text-white/70">{item}</p>
+                            <div
+                              key={item.feature}
+                              className="flex items-center justify-between"
+                            >
+                              <span>{item.feature}</span>
+                              <span className="rounded-full border border-white/10 px-2 py-0.5 text-xs text-white/60">
+                                {item.plan}
+                              </span>
                             </div>
                           ))}
                         </div>
                       </div>
                     </div>
-                  )}
 
-                  {activeTab === "deployment" && (
-                    <div className="space-y-6">
-                      <div className="grid gap-6 md:grid-cols-2">
-                        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-                          <h3 className="mb-6 flex items-center gap-2 text-xl font-semibold">
-                            <Users className="size-5" />
-                            Access controls
-                          </h3>
-                          <div className="space-y-4 text-sm text-white/80">
-                            {[
-                              { feature: "SSO / SAML", plan: "Business+" },
-                              { feature: "2FA / MFA", plan: "All plans" },
-                              {
-                                feature: "Session management",
-                                plan: "All plans",
-                              },
-                              {
-                                feature: "SCIM provisioning",
-                                plan: "Enterprise Grid",
-                              },
-                              {
-                                feature: "Role-based access",
-                                plan: "Business+",
-                              },
-                              {
-                                feature: "Guest access controls",
-                                plan: "All plans",
-                              },
-                            ].map((item) => (
-                              <div
-                                key={item.feature}
-                                className="flex items-center justify-between"
-                              >
-                                <span>{item.feature}</span>
-                                <span className="rounded-full border border-white/10 px-2 py-0.5 text-xs text-white/60">
-                                  {item.plan}
-                                </span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-
-                        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-                          <h3 className="mb-6 flex items-center gap-2 text-xl font-semibold">
-                            <Settings className="size-5" />
-                            Admin controls
-                          </h3>
-                          <div className="space-y-4 text-sm text-white/80">
-                            {[
-                              { feature: "Audit logs", plan: "Business+" },
-                              {
-                                feature: "DLP integration",
-                                plan: "Enterprise Grid",
-                              },
-                              {
-                                feature: "eDiscovery API",
-                                plan: "Enterprise Grid",
-                              },
-                              {
-                                feature: "Retention policies",
-                                plan: "Business+",
-                              },
-                              { feature: "Admin analytics", plan: "Business+" },
-                              { feature: "App management", plan: "All plans" },
-                            ].map((item) => (
-                              <div
-                                key={item.feature}
-                                className="flex items-center justify-between"
-                              >
-                                <span>{item.feature}</span>
-                                <span className="rounded-full border border-white/10 px-2 py-0.5 text-xs text-white/60">
-                                  {item.plan}
-                                </span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="rounded-3xl border border-yellow-500/30 bg-yellow-500/10 p-6">
-                        <div className="flex items-start gap-3 text-sm text-white/80">
-                          <AlertTriangle className="mt-0.5 size-5 text-yellow-300" />
-                          <div>
-                            <p className="font-semibold">Recommendation</p>
-                            <p className="mt-1 text-white/70">
-                              For enterprise deployments, enable SSO/SAML and
-                              enforce MFA. Consider Enterprise Grid for EKM,
-                              DLP, and dedicated support. Review third-party app
-                              access quarterly.
-                            </p>
-                          </div>
+                    <div className="rounded-3xl border border-yellow-500/30 bg-yellow-500/10 p-6">
+                      <div className="flex items-start gap-3 text-sm text-white/80">
+                        <AlertTriangle className="mt-0.5 size-5 text-yellow-300" />
+                        <div>
+                          <p className="font-semibold">Recommendation</p>
+                          <p className="mt-1 text-white/70">
+                            For enterprise deployments, enable SSO/SAML and
+                            enforce MFA. Consider Enterprise Grid for EKM, DLP,
+                            and dedicated support. Review third-party app access
+                            quarterly.
+                          </p>
                         </div>
                       </div>
                     </div>
-                  )}
-                </div>
-              </section>
+                  </div>
+                )}
+              </div>
+            </section>
 
-              <section className="space-y-6">
-                <h2 className="text-3xl font-semibold">
-                  Recommended alternatives
-                </h2>
-                <div className="grid gap-6 md:grid-cols-2">
-                  {alternatives.map((alt) => (
-                    <div
-                      key={alt.name}
-                      className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-8"
-                    >
-                      <div className="flex items-start justify-between gap-4">
-                        <div className="flex items-center gap-4">
-                          <div className="flex size-12 items-center justify-center rounded-2xl bg-white/10 text-2xl">
-                            {alt.icon}
-                          </div>
-                          <div>
-                            <p className="text-xl font-semibold">{alt.name}</p>
-                            <p className="text-sm text-white/60">
-                              Trust Score: {alt.score}/100
-                            </p>
-                          </div>
-                        </div>
-                        <span className="rounded-full border border-white/10 px-3 py-1 text-xs uppercase text-white/60">
-                          Alternative
-                        </span>
-                      </div>
-                      <p className="mt-4 text-sm text-white/70">{alt.reason}</p>
-                      <div className="mt-6 grid gap-4 text-xs text-white/60 md:grid-cols-2">
-                        <div>
-                          <p className="text-white/40">Advantages</p>
-                          <ul className="mt-2 space-y-1">
-                            {alt.pros.map((item) => (
-                              <li
-                                key={item}
-                                className="flex items-center gap-2"
-                              >
-                                <CheckCircle2 className="size-3 text-emerald-300" />
-                                {item}
-                              </li>
-                            ))}
-                          </ul>
+            <section className="space-y-6">
+              <h2 className="text-3xl font-semibold">
+                Recommended alternatives
+              </h2>
+              <div className="grid gap-6 md:grid-cols-2">
+                {alternatives.map((alt) => (
+                  <div
+                    key={alt.name}
+                    className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-8"
+                  >
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex items-center gap-4">
+                        <div className="flex size-12 items-center justify-center rounded-2xl bg-white/10 text-2xl">
+                          {alt.icon}
                         </div>
                         <div>
-                          <p className="text-white/40">Trade-offs</p>
-                          <ul className="mt-2 space-y-1">
-                            {alt.cons.map((item) => (
-                              <li
-                                key={item}
-                                className="flex items-center gap-2"
-                              >
-                                <AlertCircle className="size-3 text-yellow-300" />
-                                {item}
-                              </li>
-                            ))}
-                          </ul>
+                          <p className="text-xl font-semibold">{alt.name}</p>
+                          <p className="text-sm text-white/60">
+                            Trust Score: {alt.score}/100
+                          </p>
                         </div>
                       </div>
+                      <span className="rounded-full border border-white/10 px-3 py-1 text-xs uppercase text-white/60">
+                        Alternative
+                      </span>
                     </div>
-                  ))}
-                </div>
-              </section>
+                    <p className="mt-4 text-sm text-white/70">{alt.reason}</p>
+                    <div className="mt-6 grid gap-4 text-xs text-white/60 md:grid-cols-2">
+                      <div>
+                        <p className="text-white/40">Advantages</p>
+                        <ul className="mt-2 space-y-1">
+                          {alt.pros.map((item) => (
+                            <li key={item} className="flex items-center gap-2">
+                              <CheckCircle2 className="size-3 text-emerald-300" />
+                              {item}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div>
+                        <p className="text-white/40">Trade-offs</p>
+                        <ul className="mt-2 space-y-1">
+                          {alt.cons.map((item) => (
+                            <li key={item} className="flex items-center gap-2">
+                              <AlertCircle className="size-3 text-yellow-300" />
+                              {item}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
 
-              <section className="rounded-3xl border border-white/10 bg-white/5 p-8">
-                <h2 className="text-3xl font-semibold">Sources & citations</h2>
-                <div className="mt-6 space-y-4">
-                  {sources.map((source) => (
-                    <div
-                      key={source.source}
-                      className="flex flex-col gap-4 rounded-2xl border border-white/5 bg-black/30 p-4 text-sm text-white/70 md:flex-row md:items-center md:justify-between"
-                    >
-                      <div className="flex items-center gap-3">
-                        <span
-                          className={`rounded-full border px-3 py-1 text-xs uppercase tracking-wide ${
-                            source.type === "vendor"
-                              ? "border-blue-500/30 bg-blue-500/20 text-blue-200"
-                              : "border-emerald-500/30 bg-emerald-500/20 text-emerald-200"
-                          }`}
-                        >
-                          {source.type}
-                        </span>
-                        <span>{source.source}</span>
-                      </div>
-                      <div className="flex flex-wrap items-center gap-4 text-xs text-white/50">
-                        <span>{source.date}</span>
-                        <a
-                          href="#"
-                          className="inline-flex items-center gap-1 text-white/60 transition hover:text-white"
-                        >
-                          {source.url}
-                          <ExternalLink className="size-3" />
-                        </a>
-                      </div>
+            <section className="rounded-3xl border border-white/10 bg-white/5 p-8">
+              <h2 className="text-3xl font-semibold">Sources & citations</h2>
+              <div className="mt-6 space-y-4">
+                {sources.map((source) => (
+                  <div
+                    key={source.source}
+                    className="flex flex-col gap-4 rounded-2xl border border-white/5 bg-black/30 p-4 text-sm text-white/70 md:flex-row md:items-center md:justify-between"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span
+                        className={`rounded-full border px-3 py-1 text-xs uppercase tracking-wide ${
+                          source.type === "vendor"
+                            ? "border-blue-500/30 bg-blue-500/20 text-blue-200"
+                            : "border-emerald-500/30 bg-emerald-500/20 text-emerald-200"
+                        }`}
+                      >
+                        {source.type}
+                      </span>
+                      <span>{source.source}</span>
                     </div>
-                  ))}
-                </div>
-                <div className="mt-6 rounded-2xl border border-blue-500/20 bg-blue-500/10 p-4 text-xs text-white/70">
-                  <Info className="mb-1 size-4 text-blue-300" />
-                  All sources accessed and verified between November 10–15,
-                  2025. Vendor-stated claims are labeled and corroborated when
-                  possible.
-                </div>
-              </section>
-            </div>
-            <aside className="rounded-3xl border border-white/10 bg-zinc-900/70 p-6 shadow-2xl lg:sticky lg:top-28">
+                    <div className="flex flex-wrap items-center gap-4 text-xs text-white/50">
+                      <span>{source.date}</span>
+                      <a
+                        href="#"
+                        className="inline-flex items-center gap-1 text-white/60 transition hover:text-white"
+                      >
+                        {source.url}
+                        <ExternalLink className="size-3" />
+                      </a>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-6 rounded-2xl border border-blue-500/20 bg-blue-500/10 p-4 text-xs text-white/70">
+                <Info className="mb-1 size-4 text-blue-300" />
+                All sources accessed and verified between November 10–15, 2025.
+                Vendor-stated claims are labeled and corroborated when possible.
+              </div>
+            </section>
+          </div>
+          <aside className="mt-10 hidden lg:block">
+            <div className="sticky top-24 rounded-3xl border border-white/20 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.18),_rgba(0,0,0,0))] bg-zinc-950/85 p-6 shadow-[0_25px_80px_rgba(0,0,0,0.65)] backdrop-blur-xl">
               <div className="flex items-center gap-3">
                 <div className="flex size-12 items-center justify-center rounded-2xl bg-white/10">
                   <Sparkles className="size-5 text-emerald-300" />
@@ -982,7 +973,7 @@ export default function ReportDetailPage(props: ReportDetailPageProps) {
                 </div>
               </div>
 
-              <div className="mt-6 max-h-[420px] space-y-4 overflow-y-auto pr-1">
+              <div className="mt-6 max-h-[calc(100vh-220px)] space-y-4 overflow-y-auto pr-1">
                 {chatMessages.map((message) => (
                   <div
                     key={message.id}
@@ -1062,8 +1053,8 @@ export default function ReportDetailPage(props: ReportDetailPageProps) {
                   </button>
                 </div>
               </form>
-            </aside>
-          </div>
+            </div>
+          </aside>
         </div>
       </div>
     </div>
