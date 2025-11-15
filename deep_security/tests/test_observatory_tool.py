@@ -7,7 +7,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 from aiohttp import ClientTimeout
 
-from open_deep_research.utils import observatory_scan
+from open_deep_research.tools import observatory_scan
 
 
 @pytest.mark.asyncio
