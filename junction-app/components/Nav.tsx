@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { User } from "lucide-react";
 
 export default function Nav() {
   const { user } = useAuth();
@@ -23,18 +24,21 @@ export default function Nav() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isLanding]);
 
-  const navTheme = isLanding
-    ? scrolled
+  // For now we will always go with the dark shell theme but this should be refactored later
+  const isDarkShell = true;
+
+  const navTheme = isDarkShell
+    ? scrolled && isLanding
       ? "border-white/10 bg-zinc-950/80 text-white shadow-lg shadow-black/30"
-      : "border-transparent bg-transparent text-white"
+      : "border-white/10 bg-zinc-950/60 text-white"
     : "border-gray-200 bg-white text-gray-900 shadow-sm";
-  const linkTheme = isLanding
-    ? "text-sm font-medium text-white/80 hover:text-white"
+  const linkTheme = isDarkShell
+    ? "text-sm font-medium text-white/70 hover:text-white"
     : "text-sm font-medium text-gray-700 hover:text-gray-900";
-  const buttonTheme = isLanding
+  const buttonTheme = isDarkShell
     ? "bg-white text-zinc-950 hover:bg-zinc-100"
     : "bg-blue-600 text-white hover:bg-blue-700";
-  const secondaryLinkTheme = isLanding ? "text-white" : "text-gray-900";
+  const secondaryLinkTheme = isDarkShell ? "text-white" : "text-gray-900";
 
   const landingLinks = [
     { href: "/#how-it-works", label: "How it works" },
@@ -65,25 +69,35 @@ export default function Nav() {
             )}
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             {user ? (
               <>
                 <Link
                   href="/dashboard"
-                  className={`${linkTheme} rounded-md px-3 py-2`}
+                  className={`${linkTheme} rounded-full px-4 py-2 transition`}
                 >
                   Dashboard
                 </Link>
-              </>
-            ) : (
-              <>
                 <Link
-                  href="/auth"
-                  className={`${buttonTheme} rounded-full px-4 py-2 text-sm font-medium transition`}
+                  href="/reports"
+                  className={`${linkTheme} rounded-full px-4 py-2 transition`}
                 >
-                  Sign In
+                  Reports
+                </Link>
+                <Link
+                  href="/profile"
+                  className={`${linkTheme} rounded-full px-4 py-2 transition`}
+                >
+                  <User className="size-4" />
                 </Link>
               </>
+            ) : (
+              <Link
+                href="/auth"
+                className={`${buttonTheme} rounded-full px-4 py-2 text-sm font-medium transition`}
+              >
+                Sign In
+              </Link>
             )}
           </div>
         </div>

@@ -1,6 +1,5 @@
 "use client";
 
-import { usePathname } from "next/navigation";
 import Nav from "@/components/Nav";
 
 type AppChromeProps = {
@@ -8,10 +7,7 @@ type AppChromeProps = {
 };
 
 export function AppChrome({ children }: AppChromeProps) {
-  const pathname = usePathname();
-  const isLanding = pathname === "/";
-
-  const theme = isLanding ? "bg-zinc-950 text-white" : "bg-white text-zinc-900";
+  const theme = "bg-zinc-950 text-white";
 
   return (
     <div className={`${theme} min-h-screen`}>
