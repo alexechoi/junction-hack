@@ -53,8 +53,78 @@ export default function ResearchStreamModal({
   const [findings, setFindings] = useState<string[]>([]);
   const [sources, setSources] = useState<string[]>([]);
   const [trustScore, setTrustScore] = useState<number | null>(null);
+  const [expandedSections, setExpandedSections] = useState<Set<string>>(
+    new Set(), // Start with all sections collapsed
+  );
   const abortControllerRef = useRef<AbortController | null>(null);
   const eventsEndRef = useRef<HTMLDivElement>(null);
+
+  const toggleSection = (sectionId: string) => {
+    setExpandedSections((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(sectionId)) {
+        newSet.delete(sectionId);
+      } else {
+        newSet.add(sectionId);
+      }
+      return newSet;
+    });
+  };
+
+  const parseBriefIntoSections = (brief: string) => {
+    // Split by common markdown headers or double line breaks
+    const sections: { title: string; content: string; id: string }[] = [];
+
+    // Try to split by headers first
+    const headerRegex = /^#{1,3}\s+(.+)$/gm;
+    const parts = brief.split(headerRegex);
+
+    if (parts.length > 1) {
+      // Has headers
+      for (let i = 1; i < parts.length; i += 2) {
+        const title = parts[i].trim();
+        const content = parts[i + 1]?.trim() || "";
+        sections.push({
+          title,
+          content,
+          id: title.toLowerCase().replace(/\s+/g, "-"),
+        });
+      }
+
+      // Add intro if exists
+      if (parts[0]?.trim()) {
+        sections.unshift({
+          title: "Summary",
+          content: parts[0].trim(),
+          id: "summary",
+        });
+      }
+    } else {
+      // No headers, split by paragraphs and group
+      const paragraphs = brief.split(/\n\n+/);
+
+      if (paragraphs.length > 3) {
+        sections.push({
+          title: "Summary",
+          content: paragraphs.slice(0, 2).join("\n\n"),
+          id: "summary",
+        });
+        sections.push({
+          title: "Detailed Analysis",
+          content: paragraphs.slice(2).join("\n\n"),
+          id: "details",
+        });
+      } else {
+        sections.push({
+          title: "Research Brief",
+          content: brief,
+          id: "summary",
+        });
+      }
+    }
+
+    return sections;
+  };
 
   const scrollToBottom = () => {
     eventsEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -74,7 +144,11 @@ export default function ResearchStreamModal({
       updatePhaseStatus("entity-identification", "active");
     }
 
-    if (nodeKey?.includes("security") || nodeKey?.includes("vuln") || nodeKey?.includes("cve")) {
+    if (
+      nodeKey?.includes("security") ||
+      nodeKey?.includes("vuln") ||
+      nodeKey?.includes("cve")
+    ) {
       updatePhaseStatus("entity-identification", "complete");
       updatePhaseStatus("security-analysis", "active");
 
@@ -82,8 +156,8 @@ export default function ResearchStreamModal({
       const content = JSON.stringify(data);
       const cveMatches = content.match(/CVE-\d{4}-\d+/g);
       if (cveMatches) {
-        cveMatches.forEach(cve => {
-          setFindings(prev => {
+        cveMatches.forEach((cve) => {
+          setFindings((prev) => {
             if (!prev.includes(`Vulnerability detected: ${cve}`)) {
               return [...prev, `Vulnerability detected: ${cve}`];
             }
@@ -98,14 +172,18 @@ export default function ResearchStreamModal({
       updatePhaseStatus("compliance-check", "active");
     }
 
-    if (nodeKey?.includes("source") || nodeKey?.includes("search") || nodeKey?.includes("web")) {
+    if (
+      nodeKey?.includes("source") ||
+      nodeKey?.includes("search") ||
+      nodeKey?.includes("web")
+    ) {
       updatePhaseStatus("compliance-check", "complete");
       updatePhaseStatus("source-gathering", "active");
 
       // Extract sources
       const urls = extractUrls(JSON.stringify(data));
-      urls.forEach(url => {
-        setSources(prev => {
+      urls.forEach((url) => {
+        setSources((prev) => {
           if (!prev.includes(url) && prev.length < 10) {
             return [...prev, url];
           }
@@ -127,12 +205,21 @@ export default function ResearchStreamModal({
     }
   };
 
-  const updatePhaseStatus = (phaseId: string, status: "pending" | "active" | "complete") => {
-    setPhases(prev => prev.map(phase =>
-      phase.id === phaseId
-        ? { ...phase, status, timestamp: status !== "pending" ? Date.now() : phase.timestamp }
-        : phase
-    ));
+  const updatePhaseStatus = (
+    phaseId: string,
+    status: "pending" | "active" | "complete",
+  ) => {
+    setPhases((prev) =>
+      prev.map((phase) =>
+        phase.id === phaseId
+          ? {
+              ...phase,
+              status,
+              timestamp: status !== "pending" ? Date.now() : phase.timestamp,
+            }
+          : phase,
+      ),
+    );
   };
 
   const extractUrls = (text: string): string[] => {
@@ -377,29 +464,30 @@ export default function ResearchStreamModal({
           </div>
         </div>
 
-        {/* Main content area */}
-        <div className="relative z-10 h-[calc(100vh-180px)] overflow-y-auto p-8">
-          <div className="mx-auto max-w-6xl space-y-6">
+        {/* Main content area - Split Screen */}
+        <div className="relative z-10 flex h-[calc(100vh-180px)] gap-6 p-8">
+          {/* Left Panel - Research Progress & Findings */}
+          <div className="flex w-1/2 flex-col gap-6 overflow-y-auto">
             {/* Trust Score Card */}
             {trustScore !== null && (
-              <div className="animate-in slide-in-from-top fade-in duration-700 rounded-3xl border border-white/10 bg-gradient-to-br from-emerald-500/10 to-blue-500/10 p-8 backdrop-blur-xl">
+              <div className="animate-in slide-in-from-left fade-in duration-700 shrink-0 rounded-3xl border border-white/10 bg-gradient-to-br from-emerald-500/10 to-blue-500/10 p-6 backdrop-blur-xl">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm uppercase tracking-widest text-white/60">
+                    <p className="text-xs uppercase tracking-widest text-white/60">
                       Security Trust Score
                     </p>
-                    <div className="mt-2 flex items-baseline gap-3">
-                      <span className="text-6xl font-bold text-white">
+                    <div className="mt-2 flex items-baseline gap-2">
+                      <span className="text-5xl font-bold text-white">
                         {trustScore}
                       </span>
-                      <span className="text-2xl text-white/40">/100</span>
+                      <span className="text-xl text-white/40">/100</span>
                     </div>
                   </div>
-                  <div className="flex size-24 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-blue-400 shadow-2xl shadow-emerald-500/20">
-                    <Shield className="size-12 text-white" />
+                  <div className="flex size-20 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-blue-400 shadow-2xl shadow-emerald-500/20">
+                    <Shield className="size-10 text-white" />
                   </div>
                 </div>
-                <div className="mt-6 h-3 overflow-hidden rounded-full bg-white/10">
+                <div className="mt-4 h-2 overflow-hidden rounded-full bg-white/10">
                   <div
                     className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-blue-400 transition-all duration-1000 ease-out"
                     style={{ width: `${trustScore}%` }}
@@ -409,27 +497,27 @@ export default function ResearchStreamModal({
             )}
 
             {/* Research Phases */}
-            <div className="rounded-3xl border border-white/10 bg-zinc-900/60 p-8 backdrop-blur-xl">
-              <h3 className="mb-6 text-xl font-semibold text-white">
+            <div className="shrink-0 rounded-3xl border border-white/10 bg-zinc-900/60 p-6 backdrop-blur-xl">
+              <h3 className="mb-4 text-lg font-semibold text-white">
                 Research Progress
               </h3>
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {phases.map((phase, index) => (
                   <div
                     key={phase.id}
                     className="animate-in slide-in-from-left fade-in duration-500"
                     style={{ animationDelay: `${index * 100}ms` }}
                   >
-                    <div className="group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-r from-white/5 to-transparent p-5 transition-all hover:border-white/20">
+                    <div className="group relative overflow-hidden rounded-xl border border-white/10 bg-gradient-to-r from-white/5 to-transparent p-4 transition-all hover:border-white/20">
                       {/* Active phase animated background */}
                       {phase.status === "active" && (
                         <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-emerald-500/10 to-blue-500/10" />
                       )}
 
-                      <div className="relative flex items-center gap-4">
+                      <div className="relative flex items-center gap-3">
                         {/* Icon */}
                         <div
-                          className={`flex size-12 items-center justify-center rounded-xl transition-all duration-500 ${
+                          className={`flex size-10 shrink-0 items-center justify-center rounded-lg transition-all duration-500 ${
                             phase.status === "complete"
                               ? "bg-emerald-500/20 text-emerald-400"
                               : phase.status === "active"
@@ -438,35 +526,35 @@ export default function ResearchStreamModal({
                           }`}
                         >
                           {phase.status === "complete" ? (
-                            <CheckCircle2 className="size-6" />
+                            <CheckCircle2 className="size-5" />
                           ) : phase.status === "active" ? (
-                            <Loader2 className="size-6 animate-spin" />
+                            <Loader2 className="size-5 animate-spin" />
                           ) : (
                             phase.icon
                           )}
                         </div>
 
                         {/* Content */}
-                        <div className="flex-1">
-                          <div className="flex items-center gap-3">
-                            <h4 className="font-semibold text-white">
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-2">
+                            <h4 className="truncate font-medium text-white text-sm">
                               {phase.title}
                             </h4>
                             {phase.status === "active" && (
-                              <span className="rounded-full bg-blue-500/20 px-3 py-1 text-xs font-medium text-blue-400">
-                                In Progress
+                              <span className="shrink-0 rounded-full bg-blue-500/20 px-2 py-0.5 text-xs font-medium text-blue-400">
+                                Active
                               </span>
                             )}
                           </div>
-                          <p className="mt-1 text-sm text-white/60">
+                          <p className="mt-0.5 truncate text-xs text-white/60">
                             {phase.description}
                           </p>
                         </div>
 
                         {/* Status indicator */}
-                        <div className="flex items-center">
+                        <div className="flex shrink-0 items-center">
                           {phase.status === "complete" && (
-                            <div className="flex size-3 items-center justify-center">
+                            <div className="relative flex size-3 items-center justify-center">
                               <div className="size-3 animate-ping rounded-full bg-emerald-400 opacity-75" />
                               <div className="absolute size-3 rounded-full bg-emerald-400" />
                             </div>
@@ -481,25 +569,25 @@ export default function ResearchStreamModal({
 
             {/* Key Findings */}
             {findings.length > 0 && (
-              <div className="animate-in slide-in-from-bottom fade-in duration-700 rounded-3xl border border-white/10 bg-zinc-900/60 p-8 backdrop-blur-xl">
-                <div className="mb-6 flex items-center gap-3">
-                  <AlertTriangle className="size-6 text-yellow-400" />
-                  <h3 className="text-xl font-semibold text-white">
+              <div className="animate-in slide-in-from-bottom fade-in duration-700 shrink-0 rounded-3xl border border-white/10 bg-zinc-900/60 p-6 backdrop-blur-xl">
+                <div className="mb-4 flex items-center gap-2">
+                  <AlertTriangle className="size-5 text-yellow-400" />
+                  <h3 className="text-lg font-semibold text-white">
                     Key Findings
                   </h3>
-                  <span className="rounded-full bg-yellow-500/20 px-3 py-1 text-xs font-medium text-yellow-400">
-                    {findings.length} detected
+                  <span className="rounded-full bg-yellow-500/20 px-2 py-0.5 text-xs font-medium text-yellow-400">
+                    {findings.length}
                   </span>
                 </div>
-                <div className="space-y-3">
+                <div className="space-y-2">
                   {findings.map((finding, index) => (
                     <div
                       key={index}
-                      className="animate-in slide-in-from-right fade-in duration-500 flex items-start gap-3 rounded-xl border border-yellow-500/20 bg-yellow-500/5 p-4"
+                      className="animate-in slide-in-from-right fade-in duration-500 flex items-start gap-2 rounded-lg border border-yellow-500/20 bg-yellow-500/5 p-3"
                       style={{ animationDelay: `${index * 100}ms` }}
                     >
-                      <div className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full bg-yellow-500/20">
-                        <div className="size-2 rounded-full bg-yellow-400" />
+                      <div className="mt-1 flex size-4 shrink-0 items-center justify-center rounded-full bg-yellow-500/20">
+                        <div className="size-1.5 rounded-full bg-yellow-400" />
                       </div>
                       <p className="text-sm text-white/80">{finding}</p>
                     </div>
@@ -508,89 +596,249 @@ export default function ResearchStreamModal({
               </div>
             )}
 
-            {/* Sources */}
-            {sources.length > 0 && (
-              <div className="animate-in slide-in-from-bottom fade-in duration-700 rounded-3xl border border-white/10 bg-zinc-900/60 p-8 backdrop-blur-xl">
-                <div className="mb-6 flex items-center gap-3">
-                  <LinkIcon className="size-6 text-blue-400" />
-                  <h3 className="text-xl font-semibold text-white">
-                    Intelligence Sources
-                  </h3>
-                  <span className="rounded-full bg-blue-500/20 px-3 py-1 text-xs font-medium text-blue-400">
-                    {sources.length} sources
-                  </span>
-                </div>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  {sources.map((source, index) => (
-                    <a
-                      key={index}
-                      href={source}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="animate-in slide-in-from-left fade-in duration-500 group flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-4 transition-all hover:border-blue-400/50 hover:bg-blue-500/10"
-                      style={{ animationDelay: `${index * 50}ms` }}
-                    >
-                      <Globe className="size-5 shrink-0 text-blue-400" />
-                      <span className="truncate text-sm text-white/70 group-hover:text-white">
-                        {new URL(source).hostname}
-                      </span>
-                    </a>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Research Brief */}
-            {researchBrief && (
-              <div className="animate-in slide-in-from-bottom fade-in duration-700 rounded-3xl border border-white/10 bg-gradient-to-br from-white/5 to-transparent p-8 backdrop-blur-xl">
-                <div className="mb-6 flex items-center gap-3">
-                  <FileSearch className="size-6 text-emerald-400" />
-                  <h3 className="text-xl font-semibold text-white">
-                    Security Research Brief
-                  </h3>
-                </div>
-                <div className="prose prose-invert prose-sm max-w-none">
-                  <div className="whitespace-pre-wrap rounded-2xl border border-white/5 bg-black/20 p-6 text-base leading-relaxed text-white/80">
-                    {researchBrief}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Loading state */}
-            {!error && phases.every(p => p.status === "pending") && (
-              <div className="flex flex-col items-center justify-center py-20">
+            {/* Loading state - Left Panel */}
+            {!error && phases.every((p) => p.status === "pending") && (
+              <div className="flex flex-col items-center justify-center py-16">
                 <div className="relative">
-                  <div className="size-20 animate-spin rounded-full border-4 border-white/10 border-t-emerald-400" />
+                  <div className="size-16 animate-spin rounded-full border-4 border-white/10 border-t-emerald-400" />
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <Shield className="size-8 text-emerald-400" />
+                    <Shield className="size-6 text-emerald-400" />
                   </div>
                 </div>
-                <p className="mt-6 text-lg text-white/60">
-                  Initializing deep security research...
-                </p>
-                <p className="mt-2 text-sm text-white/40">
-                  This may take a few moments
+                <p className="mt-4 text-sm text-white/60">
+                  Initializing research...
                 </p>
               </div>
             )}
 
-            {/* Error state */}
+            {/* Error state - Left Panel */}
             {error && (
-              <div className="animate-in fade-in zoom-in duration-500 rounded-3xl border border-red-500/20 bg-red-500/10 p-8 backdrop-blur-xl">
-                <div className="flex items-start gap-4">
-                  <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-red-500/20">
-                    <AlertCircle className="size-6 text-red-400" />
+              <div className="animate-in fade-in zoom-in duration-500 rounded-3xl border border-red-500/20 bg-red-500/10 p-6 backdrop-blur-xl">
+                <div className="flex items-start gap-3">
+                  <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-red-500/20">
+                    <AlertCircle className="size-5 text-red-400" />
                   </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-red-400">
+                  <div className="min-w-0">
+                    <h3 className="font-semibold text-red-400">
                       Research Error
                     </h3>
-                    <p className="mt-2 text-sm text-red-300/80">{error}</p>
+                    <p className="mt-1 text-sm text-red-300/80">{error}</p>
                   </div>
                 </div>
               </div>
             )}
+          </div>
+
+          {/* Right Panel - Research Brief & Sources */}
+          <div className="flex w-1/2 flex-col gap-6">
+            {/* Research Brief */}
+            {researchBrief ? (
+              <div className="animate-in slide-in-from-right fade-in duration-700 flex flex-1 flex-col rounded-3xl border border-white/10 bg-gradient-to-br from-white/5 to-transparent backdrop-blur-xl">
+                <div className="shrink-0 border-b border-white/10 px-6 py-4">
+                  <div className="flex items-center gap-2">
+                    <FileSearch className="size-5 text-emerald-400" />
+                    <h3 className="text-lg font-semibold text-white">
+                      Security Research Brief
+                    </h3>
+                  </div>
+                </div>
+                <div className="min-h-0 flex-1 overflow-y-auto p-4">
+                  <div className="space-y-3">
+                    {parseBriefIntoSections(researchBrief).map(
+                      (section, index) => (
+                        <div
+                          key={section.id}
+                          className="animate-in slide-in-from-bottom fade-in duration-500 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm transition-all hover:border-white/20"
+                          style={{ animationDelay: `${index * 100}ms` }}
+                        >
+                          <button
+                            onClick={() => toggleSection(section.id)}
+                            className="flex w-full items-center justify-between gap-3 p-4 text-left transition-colors hover:bg-white/5"
+                          >
+                            <div className="flex items-center gap-2">
+                              <div
+                                className={`flex size-8 shrink-0 items-center justify-center rounded-lg transition-all ${
+                                  expandedSections.has(section.id)
+                                    ? "bg-emerald-500/20 text-emerald-400"
+                                    : "bg-white/10 text-white/60"
+                                }`}
+                              >
+                                {index === 0 ? (
+                                  <FileSearch className="size-4" />
+                                ) : (
+                                  <div className="flex size-2 rounded-full bg-current" />
+                                )}
+                              </div>
+                              <h4 className="font-semibold text-white text-sm">
+                                {section.title}
+                              </h4>
+                            </div>
+                            <div
+                              className={`shrink-0 transition-transform duration-300 ${
+                                expandedSections.has(section.id)
+                                  ? "rotate-180"
+                                  : ""
+                              }`}
+                            >
+                              <svg
+                                className="size-5 text-white/60"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M19 9l-7 7-7-7"
+                                />
+                              </svg>
+                            </div>
+                          </button>
+
+                          {expandedSections.has(section.id) && (
+                            <div className="animate-in slide-in-from-top fade-in duration-300 border-t border-white/10 p-4">
+                              <div className="space-y-3">
+                                {section.content
+                                  .split("\n\n")
+                                  .map((paragraph, pIndex) => {
+                                    // Check if it's a list item
+                                    if (paragraph.trim().match(/^[-*•]\s/)) {
+                                      const items = paragraph
+                                        .split("\n")
+                                        .filter((line) => line.trim());
+                                      return (
+                                        <ul key={pIndex} className="space-y-2">
+                                          {items.map((item, iIndex) => (
+                                            <li
+                                              key={iIndex}
+                                              className="flex items-start gap-2 text-sm leading-relaxed text-white/80"
+                                            >
+                                              <span className="mt-2 flex size-1.5 shrink-0 rounded-full bg-emerald-400" />
+                                              <span>
+                                                {item
+                                                  .replace(/^[-*•]\s/, "")
+                                                  .trim()}
+                                              </span>
+                                            </li>
+                                          ))}
+                                        </ul>
+                                      );
+                                    }
+
+                                    // Check if it's a numbered list
+                                    if (paragraph.trim().match(/^\d+\.\s/)) {
+                                      const items = paragraph
+                                        .split("\n")
+                                        .filter((line) => line.trim());
+                                      return (
+                                        <ol key={pIndex} className="space-y-2">
+                                          {items.map((item, iIndex) => (
+                                            <li
+                                              key={iIndex}
+                                              className="flex items-start gap-2 text-sm leading-relaxed text-white/80"
+                                            >
+                                              <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-emerald-500/20 text-xs font-semibold text-emerald-400">
+                                                {iIndex + 1}
+                                              </span>
+                                              <span>
+                                                {item
+                                                  .replace(/^\d+\.\s/, "")
+                                                  .trim()}
+                                              </span>
+                                            </li>
+                                          ))}
+                                        </ol>
+                                      );
+                                    }
+
+                                    // Regular paragraph
+                                    return (
+                                      <p
+                                        key={pIndex}
+                                        className="text-sm leading-relaxed text-white/80"
+                                      >
+                                        {paragraph}
+                                      </p>
+                                    );
+                                  })}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      ),
+                    )}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="flex flex-1 items-center justify-center rounded-3xl border border-white/10 border-dashed bg-white/5 backdrop-blur-xl">
+                <div className="text-center">
+                  <FileSearch className="mx-auto size-12 text-white/20" />
+                  <p className="mt-4 text-sm text-white/40">
+                    Research brief will appear here
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Intelligence Sources */}
+            <div className="flex max-h-80 min-h-0 flex-col rounded-3xl border border-white/10 bg-zinc-900/60 backdrop-blur-xl">
+              <div className="shrink-0 border-b border-white/10 px-6 py-4">
+                <div className="flex items-center gap-2">
+                  <LinkIcon className="size-5 text-blue-400" />
+                  <h3 className="text-lg font-semibold text-white">
+                    Intelligence Sources
+                  </h3>
+                  {sources.length > 0 && (
+                    <span className="rounded-full bg-blue-500/20 px-2 py-0.5 text-xs font-medium text-blue-400">
+                      {sources.length}
+                    </span>
+                  )}
+                </div>
+              </div>
+              <div className="min-h-0 flex-1 overflow-y-auto p-4">
+                {sources.length > 0 ? (
+                  <div className="space-y-2">
+                    {sources.map((source, index) => (
+                      <a
+                        key={index}
+                        href={source}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="animate-in slide-in-from-bottom fade-in duration-500 group flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 p-3 transition-all hover:border-blue-400/50 hover:bg-blue-500/10"
+                        style={{ animationDelay: `${index * 50}ms` }}
+                      >
+                        <Globe className="size-4 shrink-0 text-blue-400" />
+                        <span className="min-w-0 truncate text-sm text-white/70 group-hover:text-white">
+                          {new URL(source).hostname}
+                        </span>
+                      </a>
+                    ))}
+                  </div>
+                ) : isStreaming ? (
+                  <div className="flex items-center justify-center py-8">
+                    <div className="text-center">
+                      <div className="relative mx-auto mb-3">
+                        <div className="size-10 animate-spin rounded-full border-2 border-white/10 border-t-blue-400" />
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <Globe className="size-4 text-blue-400" />
+                        </div>
+                      </div>
+                      <p className="text-xs text-white/40">
+                        Gathering intelligence sources...
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center py-8">
+                    <p className="text-xs text-white/40">
+                      No sources available yet
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
 
             <div ref={eventsEndRef} />
           </div>

@@ -15,7 +15,7 @@ export async function POST(request: Request) {
     if (!message || typeof message !== "string") {
       return Response.json(
         { error: "Message is required and must be a string" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -41,7 +41,7 @@ Entity name:`;
     if (!result.text) {
       return Response.json(
         { error: "Could not extract entity from message" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -50,7 +50,7 @@ Entity name:`;
     if (!entityName) {
       return Response.json(
         { error: "Could not extract entity from message" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -104,7 +104,7 @@ Entity name:`;
         error: "Internal server error",
         details: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
