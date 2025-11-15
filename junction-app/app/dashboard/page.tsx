@@ -61,7 +61,25 @@ export default function DashboardPage() {
     }
   };
 
-  const handleStreamComplete = () => {
+  const handleStreamComplete = async () => {
+    // Save accessed report to user's collection
+    if (user && streamingEntityName) {
+      try {
+        await fetch("/api/user/accessed-reports", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: user.uid,
+            entityName: streamingEntityName,
+          }),
+        });
+      } catch (error) {
+        console.error("Error saving accessed report:", error);
+      }
+    }
+
     // Redirect to reports page after streaming completes
     router.push("/reports");
   };
