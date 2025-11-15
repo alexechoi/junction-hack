@@ -74,13 +74,6 @@ export default function Nav() {
                 >
                   Dashboard
                 </Link>
-                <span
-                  className={`text-sm ${
-                    isLanding ? "text-white/70" : "text-gray-600"
-                  }`}
-                >
-                  {user.email}
-                </span>
               </>
             ) : (
               <>
