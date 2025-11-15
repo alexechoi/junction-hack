@@ -1,0 +1,60 @@
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Git
+.git/
+.gitignore
+
+# LangGraph specific
+.langgraph/
+.langgraph_api/
+
+# Environment files (user should mount these or set via docker run -e)
+.env
+.env.local
+.env.*.local
+
+# Documentation
+README.md
+CLAUDE.md
+LICENSE
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Logs
+*.log
+logs/
+tmp/
+temp/
+
+# Jupyter
+.ipynb_checkpoints/
+
+
+
