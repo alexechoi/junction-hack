@@ -2,18 +2,51 @@
 
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
+import { usePathname } from "next/navigation";
 
 export default function Nav() {
   const { user } = useAuth();
+  const pathname = usePathname();
+  const isLanding = pathname === "/";
+
+  const navTheme = isLanding
+    ? "border-white/10 bg-zinc-950/60 text-white"
+    : "border-gray-200 bg-white text-gray-900 shadow-sm";
+  const linkTheme = isLanding
+    ? "text-sm font-medium text-white/80 hover:text-white"
+    : "text-sm font-medium text-gray-700 hover:text-gray-900";
+  const buttonTheme = isLanding
+    ? "bg-white text-zinc-950 hover:bg-zinc-100"
+    : "bg-blue-600 text-white hover:bg-blue-700";
+  const secondaryLinkTheme = isLanding ? "text-white" : "text-gray-900";
+
+  const landingLinks = [
+    { href: "/#how-it-works", label: "How it works" },
+    { href: "/#features", label: "Features" },
+    { href: "/#demo", label: "Demo" },
+    { href: "/#trust-score", label: "Trust score" },
+  ];
 
   return (
-    <nav className="bg-white shadow-sm border-b">
+    <nav className={`sticky top-0 z-50 border-b backdrop-blur ${navTheme}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <div className="flex items-center">
-            <Link href="/" className="text-xl font-bold text-gray-900">
-              Hackathon App
+          <div className="flex items-center gap-6">
+            <Link
+              href="/"
+              className={`text-xl font-bold transition ${secondaryLinkTheme}`}
+            >
+              Aegis
             </Link>
+            {isLanding && (
+              <div className="hidden md:flex items-center gap-4">
+                {landingLinks.map((link) => (
+                  <Link key={link.label} href={link.href} className={linkTheme}>
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="flex items-center gap-4">
@@ -21,25 +54,26 @@ export default function Nav() {
               <>
                 <Link
                   href="/dashboard"
-                  className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                  className={`${linkTheme} rounded-md px-3 py-2`}
                 >
                   Dashboard
                 </Link>
-                <span className="text-gray-600 text-sm">
+                <span
+                  className={`text-sm ${
+                    isLanding ? "text-white/70" : "text-gray-600"
+                  }`}
+                >
                   {user.email}
                 </span>
               </>
             ) : (
               <>
-                <Link
-                  href="/"
-                  className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
-                >
+                <Link href="/" className={`${linkTheme} rounded-md px-3 py-2`}>
                   Home
                 </Link>
                 <Link
                   href="/auth"
-                  className="bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded-md text-sm font-medium"
+                  className={`${buttonTheme} rounded-full px-4 py-2 text-sm font-medium transition`}
                 >
                   Sign In
                 </Link>
