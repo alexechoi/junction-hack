@@ -46,7 +46,7 @@ export default function ReportsPage() {
     try {
       setLoading(true);
       const response = await fetch(
-        `/api/user/accessed-reports?userId=${user.uid}`
+        `/api/user/accessed-reports?userId=${user.uid}`,
       );
       const data = await response.json();
 
@@ -140,8 +140,8 @@ export default function ReportsPage() {
                     ? Math.round(
                         accessedReports.reduce(
                           (acc, r) => acc + (r.trust_score || 0),
-                          0
-                        ) / accessedReports.length
+                          0,
+                        ) / accessedReports.length,
                       ).toString()
                     : "0",
                 subtext: "Across accessed reports",
@@ -154,7 +154,7 @@ export default function ReportsPage() {
                   : accessedReports
                       .reduce(
                         (acc, r) => acc + (r.report?.sources?.length || 0),
-                        0
+                        0,
                       )
                       .toString(),
                 subtext: "Intelligence sources used",
@@ -192,7 +192,8 @@ export default function ReportsPage() {
             <div className="flex flex-wrap gap-3 text-sm text-white/60">
               <span className="inline-flex items-center gap-2 rounded-full border border-white/10 px-3 py-1">
                 <ListChecks className="size-4 text-emerald-400" />
-                {accessedReports.length} report{accessedReports.length !== 1 ? "s" : ""}
+                {accessedReports.length} report
+                {accessedReports.length !== 1 ? "s" : ""}
               </span>
               <span className="inline-flex items-center gap-2 rounded-full border border-white/10 px-3 py-1">
                 <TrendingUp className="size-4 text-blue-400" />
@@ -231,14 +232,21 @@ export default function ReportsPage() {
                 .sort(
                   (a, b) =>
                     new Date(b.accessed_at).getTime() -
-                    new Date(a.accessed_at).getTime()
+                    new Date(a.accessed_at).getTime(),
                 )
                 .map((accessedReport) => {
                   const report = accessedReport.report;
-                  const trustScore = accessedReport.trust_score || report?.trust_score?.score || 0;
+                  const trustScore =
+                    accessedReport.trust_score ||
+                    report?.trust_score?.score ||
+                    0;
                   const riskLevel = getRiskLevel(trustScore);
-                  const productName = accessedReport.product_name || report?.product_name || accessedReport.entity_name;
-                  const vendor = accessedReport.vendor || report?.vendor || productName;
+                  const productName =
+                    accessedReport.product_name ||
+                    report?.product_name ||
+                    accessedReport.entity_name;
+                  const vendor =
+                    accessedReport.vendor || report?.vendor || productName;
                   const url = report?.url || "";
                   const category = report?.taxonomy?.[0] || "Unknown";
                   const sourceCount = report?.sources?.length || 0;
@@ -253,10 +261,12 @@ export default function ReportsPage() {
                       <div className="relative flex flex-col gap-6">
                         <div className="flex items-start justify-between gap-4">
                           <div>
-                            <p className="text-sm text-white/50">{url.replace(/^https?:\/\//, "").replace(/\/$/, "")}</p>
-                            <h3 className="text-2xl font-semibold">
-                              {vendor}
-                            </h3>
+                            <p className="text-sm text-white/50">
+                              {url
+                                .replace(/^https?:\/\//, "")
+                                .replace(/\/$/, "")}
+                            </p>
+                            <h3 className="text-2xl font-semibold">{vendor}</h3>
                             <p className="text-sm text-white/60">{category}</p>
                           </div>
                           <div className="text-right">
@@ -274,7 +284,9 @@ export default function ReportsPage() {
                             <p className="text-xs uppercase tracking-wide text-white/40">
                               Confidence
                             </p>
-                            <p className="text-white">{getConfidenceLevel(report)}</p>
+                            <p className="text-white">
+                              {getConfidenceLevel(report)}
+                            </p>
                           </div>
                           <div>
                             <p className="text-xs uppercase tracking-wide text-white/40">
@@ -286,7 +298,9 @@ export default function ReportsPage() {
                             <p className="text-xs uppercase tracking-wide text-white/40">
                               Accessed
                             </p>
-                            <p className="text-white">{getTimeSince(accessedReport.accessed_at)}</p>
+                            <p className="text-white">
+                              {getTimeSince(accessedReport.accessed_at)}
+                            </p>
                           </div>
                         </div>
 
@@ -295,7 +309,8 @@ export default function ReportsPage() {
                             className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs uppercase tracking-wide ${
                               riskLevel === "Low"
                                 ? "border border-emerald-400/40 text-emerald-300"
-                                : riskLevel === "Elevated" || riskLevel === "High"
+                                : riskLevel === "Elevated" ||
+                                    riskLevel === "High"
                                   ? "border border-yellow-400/40 text-yellow-300"
                                   : "border border-blue-400/40 text-blue-300"
                             }`}

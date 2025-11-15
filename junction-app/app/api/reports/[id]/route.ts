@@ -2,7 +2,7 @@ import { adminDb } from "@/lib/firebase-admin";
 
 export async function GET(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const { id } = await params;
@@ -24,7 +24,7 @@ export async function GET(
     if (!cacheDoc.exists) {
       return Response.json(
         { error: "Report not found", id: id.toLowerCase() },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -42,7 +42,7 @@ export async function GET(
         error: "Internal server error",
         details: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

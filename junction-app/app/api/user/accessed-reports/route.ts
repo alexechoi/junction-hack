@@ -8,17 +8,20 @@ export async function POST(request: Request) {
     if (!userId || !entityName) {
       return Response.json(
         { error: "userId and entityName are required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     // Get the cached report from the cache collection
-    const cacheDoc = await adminDb.collection("cache").doc(entityName.toLowerCase()).get();
+    const cacheDoc = await adminDb
+      .collection("cache")
+      .doc(entityName.toLowerCase())
+      .get();
 
     if (!cacheDoc.exists) {
       return Response.json(
         { error: "Report not found in cache" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -37,7 +40,7 @@ export async function POST(request: Request) {
           vendor: cacheData?.report?.vendor || null,
         }),
       },
-      { merge: true }
+      { merge: true },
     );
 
     return Response.json({
@@ -51,7 +54,7 @@ export async function POST(request: Request) {
         error: "Internal server error",
         details: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -94,7 +97,7 @@ export async function GET(request: Request) {
         }
 
         return access;
-      })
+      }),
     );
 
     return Response.json({
@@ -107,7 +110,7 @@ export async function GET(request: Request) {
         error: "Internal server error",
         details: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

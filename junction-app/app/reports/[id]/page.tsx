@@ -196,14 +196,16 @@ export default function ReportDetailPage(props: ReportDetailPageProps) {
                   </p>
                   {taxonomy.length > 0 && (
                     <div className="mt-3 flex flex-wrap gap-2 text-sm text-white/80">
-                      {taxonomy.slice(0, 3).map((tag: string, index: number) => (
-                        <span
-                          key={index}
-                          className="rounded-full border border-white/10 bg-white/10 px-3 py-1"
-                        >
-                          {tag}
-                        </span>
-                      ))}
+                      {taxonomy
+                        .slice(0, 3)
+                        .map((tag: string, index: number) => (
+                          <span
+                            key={index}
+                            className="rounded-full border border-white/10 bg-white/10 px-3 py-1"
+                          >
+                            {tag}
+                          </span>
+                        ))}
                     </div>
                   )}
                 </div>
@@ -217,9 +219,14 @@ export default function ReportDetailPage(props: ReportDetailPageProps) {
                 <div
                   className={`mt-3 inline-flex items-center gap-2 rounded-full border border-${riskLevel.color}-400/40 bg-${riskLevel.color}-500/10 px-3 py-1 text-xs uppercase tracking-wide text-${riskLevel.color}-300`}
                 >
-                  <span className={`size-1.5 rounded-full bg-${riskLevel.color}-300`} />
+                  <span
+                    className={`size-1.5 rounded-full bg-${riskLevel.color}-300`}
+                  />
                   {report?.trust_score?.confidence || "Medium"} confidence •{" "}
-                  {report?.trust_score?.source_count || report?.sources?.length || 0} sources
+                  {report?.trust_score?.source_count ||
+                    report?.sources?.length ||
+                    0}{" "}
+                  sources
                 </div>
               </div>
             </div>
@@ -232,7 +239,9 @@ export default function ReportDetailPage(props: ReportDetailPageProps) {
                     <CheckCircle2 className="size-4 text-emerald-300" />
                     Active certifications
                   </div>
-                  <div className="text-2xl font-semibold">{report.compliance.length}</div>
+                  <div className="text-2xl font-semibold">
+                    {report.compliance.length}
+                  </div>
                 </div>
               )}
               {report?.cves && (
@@ -241,7 +250,9 @@ export default function ReportDetailPage(props: ReportDetailPageProps) {
                     <AlertTriangle className="size-4 text-yellow-300" />
                     CVEs (12 months)
                   </div>
-                  <div className="text-2xl font-semibold">{report.cves.length}</div>
+                  <div className="text-2xl font-semibold">
+                    {report.cves.length}
+                  </div>
                 </div>
               )}
               {report?.vendor_info?.vulnerability_trend && (
@@ -261,7 +272,9 @@ export default function ReportDetailPage(props: ReportDetailPageProps) {
                     <Clock className="size-4 text-blue-300" />
                     Avg. patch time
                   </div>
-                  <div className="text-2xl font-semibold">{report.avg_patch_time}</div>
+                  <div className="text-2xl font-semibold">
+                    {report.avg_patch_time}
+                  </div>
                 </div>
               )}
             </div>
@@ -313,7 +326,9 @@ export default function ReportDetailPage(props: ReportDetailPageProps) {
                     {/* Strengths */}
                     {report?.strengths && report.strengths.length > 0 && (
                       <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-                        <h3 className="mb-6 text-xl font-semibold">Key strengths</h3>
+                        <h3 className="mb-6 text-xl font-semibold">
+                          Key strengths
+                        </h3>
                         <div className="space-y-4">
                           {report.strengths.map((item: any, index: number) => (
                             <div
@@ -321,7 +336,9 @@ export default function ReportDetailPage(props: ReportDetailPageProps) {
                               className="border-l-2 border-emerald-400 pl-4"
                             >
                               <div className="flex items-center justify-between">
-                                <p className="text-sm font-medium">{item.title}</p>
+                                <p className="text-sm font-medium">
+                                  {item.title}
+                                </p>
                                 <span
                                   className={`rounded-full border px-2 py-0.5 text-xs uppercase tracking-wide ${
                                     item.source_type === "vendor"
@@ -353,31 +370,38 @@ export default function ReportDetailPage(props: ReportDetailPageProps) {
                     )}
 
                     {/* Considerations */}
-                    {report?.considerations && report.considerations.length > 0 && (
-                      <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-                        <h3 className="mb-6 text-xl font-semibold">Considerations</h3>
-                        <div className="space-y-4">
-                          {report.considerations.map((item: any, index: number) => (
-                            <div
-                              key={index}
-                              className="border-l-2 border-yellow-400 pl-4"
-                            >
-                              <div className="flex items-center justify-between">
-                                <p className="text-sm font-medium">{item.title}</p>
-                                <span
-                                  className={`rounded-full border px-2 py-0.5 text-xs uppercase tracking-wide ${severityBadge(item.severity)}`}
+                    {report?.considerations &&
+                      report.considerations.length > 0 && (
+                        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+                          <h3 className="mb-6 text-xl font-semibold">
+                            Considerations
+                          </h3>
+                          <div className="space-y-4">
+                            {report.considerations.map(
+                              (item: any, index: number) => (
+                                <div
+                                  key={index}
+                                  className="border-l-2 border-yellow-400 pl-4"
                                 >
-                                  {item.severity}
-                                </span>
-                              </div>
-                              <p className="mt-1 text-xs text-white/60">
-                                {item.description}
-                              </p>
-                            </div>
-                          ))}
+                                  <div className="flex items-center justify-between">
+                                    <p className="text-sm font-medium">
+                                      {item.title}
+                                    </p>
+                                    <span
+                                      className={`rounded-full border px-2 py-0.5 text-xs uppercase tracking-wide ${severityBadge(item.severity)}`}
+                                    >
+                                      {item.severity}
+                                    </span>
+                                  </div>
+                                  <p className="mt-1 text-xs text-white/60">
+                                    {item.description}
+                                  </p>
+                                </div>
+                              ),
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )}
                   </div>
 
                   {/* Vendor Info */}
@@ -393,7 +417,9 @@ export default function ReportDetailPage(props: ReportDetailPageProps) {
                             <p className="text-xs uppercase tracking-wide text-white/50">
                               Company
                             </p>
-                            <p className="mt-1 text-white/80">{report.vendor_info.company}</p>
+                            <p className="mt-1 text-white/80">
+                              {report.vendor_info.company}
+                            </p>
                           </div>
                         )}
                         {report.vendor_info.market_presence && (
@@ -501,9 +527,13 @@ export default function ReportDetailPage(props: ReportDetailPageProps) {
                               </span>
                             )}
                           </div>
-                          <p className="mt-1 text-sm text-white/70">{cve.title}</p>
+                          <p className="mt-1 text-sm text-white/70">
+                            {cve.title}
+                          </p>
                           <div className="mt-4 grid gap-4 text-xs text-white/60 md:grid-cols-2">
-                            {cve.published && <span>Published: {cve.published}</span>}
+                            {cve.published && (
+                              <span>Published: {cve.published}</span>
+                            )}
                             {cve.patched && <span>Patched: {cve.patched}</span>}
                           </div>
                           {cve.kev === false && (
@@ -541,11 +571,13 @@ export default function ReportDetailPage(props: ReportDetailPageProps) {
                                   <p className="text-sm font-medium capitalize">
                                     {key.replace(/_/g, " ")}
                                   </p>
-                                  <p className="text-xs text-white/60">{value}</p>
+                                  <p className="text-xs text-white/60">
+                                    {value}
+                                  </p>
                                 </div>
                                 <CheckCircle2 className="size-5 text-emerald-300" />
                               </div>
-                            )
+                            ),
                           )}
                         </div>
                       </div>
@@ -569,11 +601,13 @@ export default function ReportDetailPage(props: ReportDetailPageProps) {
                                   <p className="text-sm font-medium capitalize">
                                     {key.replace(/_/g, " ")}
                                   </p>
-                                  <p className="text-xs text-white/60">{value}</p>
+                                  <p className="text-xs text-white/60">
+                                    {value}
+                                  </p>
                                 </div>
                                 <Info className="size-5 text-blue-300" />
                               </div>
-                            )
+                            ),
                           )}
                         </div>
                       </div>
@@ -581,19 +615,27 @@ export default function ReportDetailPage(props: ReportDetailPageProps) {
                   </div>
 
                   {/* Privacy Compliance */}
-                  {report?.privacy_compliance && report.privacy_compliance.length > 0 && (
-                    <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-                      <h3 className="text-xl font-semibold">Privacy & compliance</h3>
-                      <div className="mt-6 grid gap-6 md:grid-cols-3">
-                        {report.privacy_compliance.map((item: string, index: number) => (
-                          <div key={index} className="flex items-center gap-3">
-                            <CheckCircle2 className="size-5 text-emerald-300" />
-                            <p className="text-sm text-white/70">{item}</p>
-                          </div>
-                        ))}
+                  {report?.privacy_compliance &&
+                    report.privacy_compliance.length > 0 && (
+                      <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+                        <h3 className="text-xl font-semibold">
+                          Privacy & compliance
+                        </h3>
+                        <div className="mt-6 grid gap-6 md:grid-cols-3">
+                          {report.privacy_compliance.map(
+                            (item: string, index: number) => (
+                              <div
+                                key={index}
+                                className="flex items-center gap-3"
+                              >
+                                <CheckCircle2 className="size-5 text-emerald-300" />
+                                <p className="text-sm text-white/70">{item}</p>
+                              </div>
+                            ),
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
                 </div>
               )}
 
@@ -602,50 +644,56 @@ export default function ReportDetailPage(props: ReportDetailPageProps) {
                 <div className="space-y-6">
                   <div className="grid gap-6 md:grid-cols-2">
                     {/* Access Controls */}
-                    {report?.access_controls && report.access_controls.length > 0 && (
-                      <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-                        <h3 className="mb-6 flex items-center gap-2 text-xl font-semibold">
-                          <Users className="size-5" />
-                          Access controls
-                        </h3>
-                        <div className="space-y-4 text-sm text-white/80">
-                          {report.access_controls.map((item: any, index: number) => (
-                            <div
-                              key={index}
-                              className="flex items-center justify-between"
-                            >
-                              <span>{item.feature}</span>
-                              <span className="rounded-full border border-white/10 px-2 py-0.5 text-xs text-white/60">
-                                {item.plan}
-                              </span>
-                            </div>
-                          ))}
+                    {report?.access_controls &&
+                      report.access_controls.length > 0 && (
+                        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+                          <h3 className="mb-6 flex items-center gap-2 text-xl font-semibold">
+                            <Users className="size-5" />
+                            Access controls
+                          </h3>
+                          <div className="space-y-4 text-sm text-white/80">
+                            {report.access_controls.map(
+                              (item: any, index: number) => (
+                                <div
+                                  key={index}
+                                  className="flex items-center justify-between"
+                                >
+                                  <span>{item.feature}</span>
+                                  <span className="rounded-full border border-white/10 px-2 py-0.5 text-xs text-white/60">
+                                    {item.plan}
+                                  </span>
+                                </div>
+                              ),
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )}
 
                     {/* Admin Controls */}
-                    {report?.admin_controls && report.admin_controls.length > 0 && (
-                      <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-                        <h3 className="mb-6 flex items-center gap-2 text-xl font-semibold">
-                          <Settings className="size-5" />
-                          Admin controls
-                        </h3>
-                        <div className="space-y-4 text-sm text-white/80">
-                          {report.admin_controls.map((item: any, index: number) => (
-                            <div
-                              key={index}
-                              className="flex items-center justify-between"
-                            >
-                              <span>{item.feature}</span>
-                              <span className="rounded-full border border-white/10 px-2 py-0.5 text-xs text-white/60">
-                                {item.plan}
-                              </span>
-                            </div>
-                          ))}
+                    {report?.admin_controls &&
+                      report.admin_controls.length > 0 && (
+                        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+                          <h3 className="mb-6 flex items-center gap-2 text-xl font-semibold">
+                            <Settings className="size-5" />
+                            Admin controls
+                          </h3>
+                          <div className="space-y-4 text-sm text-white/80">
+                            {report.admin_controls.map(
+                              (item: any, index: number) => (
+                                <div
+                                  key={index}
+                                  className="flex items-center justify-between"
+                                >
+                                  <span>{item.feature}</span>
+                                  <span className="rounded-full border border-white/10 px-2 py-0.5 text-xs text-white/60">
+                                    {item.plan}
+                                  </span>
+                                </div>
+                              ),
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )}
                   </div>
 
                   {/* Deployment Recommendations */}
@@ -654,7 +702,9 @@ export default function ReportDetailPage(props: ReportDetailPageProps) {
                       <div className="flex items-start gap-3 text-sm text-white/80">
                         <AlertTriangle className="mt-0.5 size-5 text-yellow-300" />
                         <div>
-                          <p className="font-semibold">Deployment Recommendations</p>
+                          <p className="font-semibold">
+                            Deployment Recommendations
+                          </p>
                           <p className="mt-1 text-white/70">
                             {report.deployment_recommendations}
                           </p>
@@ -670,7 +720,9 @@ export default function ReportDetailPage(props: ReportDetailPageProps) {
           {/* Alternatives */}
           {report?.alternatives && report.alternatives.length > 0 && (
             <section className="space-y-6">
-              <h2 className="text-3xl font-semibold">Recommended alternatives</h2>
+              <h2 className="text-3xl font-semibold">
+                Recommended alternatives
+              </h2>
               <div className="grid gap-6 md:grid-cols-2">
                 {report.alternatives.map((alt: any, index: number) => (
                   <div
@@ -754,7 +806,11 @@ export default function ReportDetailPage(props: ReportDetailPageProps) {
                       {source.date && <span>{source.date}</span>}
                       {source.url && (
                         <a
-                          href={source.url.startsWith("http") ? source.url : `https://${source.url}`}
+                          href={
+                            source.url.startsWith("http")
+                              ? source.url
+                              : `https://${source.url}`
+                          }
                           target="_blank"
                           rel="noopener noreferrer"
                           className="inline-flex items-center gap-1 text-white/60 transition hover:text-white"
