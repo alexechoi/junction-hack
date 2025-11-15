@@ -1,0 +1,3 @@
+[submodule "security_deep_research"]
+	path = security_deep_research
+	url = https://github.com/albinjal/security_deep_research
