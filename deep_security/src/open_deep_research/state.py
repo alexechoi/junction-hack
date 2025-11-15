@@ -255,6 +255,8 @@ def override_reducer(current_value, new_value):
 class AgentInputState(MessagesState):
     """InputState is only 'messages'."""
 
+    original_query: Optional[str] = None
+
 class AgentState(MessagesState):
     """Main agent state containing messages and research data."""
 
@@ -264,6 +266,7 @@ class AgentState(MessagesState):
     notes: Annotated[list[str], override_reducer] = []
     final_report: str  # JSON string
     structured_report: Optional[dict] = None  # Parsed structured report for easy access
+    original_query: Optional[str] = None
 
 class SupervisorState(TypedDict):
     """State for the supervisor that manages research tasks."""

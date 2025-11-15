@@ -619,7 +619,11 @@ async def final_report_generation(state: AgentState, config: RunnableConfig):
     """
     # Step 1: Import the structured output schema
     from open_deep_research.state import SecurityAssessmentReport
+    from open_deep_research.firestore_cache import save_to_cache
     import json
+    import logging
+
+    logger = logging.getLogger(__name__)
 
     # Step 2: Extract research data
     notes = state.get("notes", [])
@@ -671,6 +675,15 @@ async def final_report_generation(state: AgentState, config: RunnableConfig):
 
             # Also store as dict for easy access
             report_dict = structured_report.model_dump()
+
+            # Save to Firestore cache if original_query is available
+            original_query = state.get("original_query")
+            if original_query:
+                try:
+                    await save_to_cache(original_query, report_dict)
+                except Exception as e:
+                    # Log error but don't fail the request
+                    logger.error(f"Failed to cache report for query '{original_query}': {e}")
 
             # Return success with structured data
             return {
