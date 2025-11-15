@@ -42,7 +42,7 @@ For the verification message when no clarification is needed:
 
 
 transform_messages_into_research_topic_prompt = """You will be given a set of messages that have been exchanged so far between yourself and the user.
-Your job is to translate these messages into a more detailed and concrete research question that will be used to guide the research.
+Your job is to translate these messages into a comprehensive SECURITY ASSESSMENT research brief that will guide the research agents.
 
 The messages that have been exchanged so far between yourself and the user are:
 <Messages>
@@ -51,29 +51,83 @@ The messages that have been exchanged so far between yourself and the user are:
 
 Today's date is {date}.
 
-You will return a single research question that will be used to guide the research.
+You will return a detailed research brief specifically for security assessment.
+
+FOR SECURITY ASSESSMENTS:
+When the user asks to assess/evaluate a software product, service, or vendor, generate a comprehensive research brief that covers ALL of these areas:
+
+REQUIRED RESEARCH AREAS:
+1. **Entity Identification**
+   - Confirm official company name, vendor, and parent organization
+   - Find primary website URL
+   - Classify software taxonomy (e.g., "SaaS Collaboration", "File Sharing", "GenAI Tool")
+
+2. **Vulnerability Analysis** (CRITICAL - use cve_search tool)
+   - Search CVE database for product/vendor vulnerabilities (past 12-24 months)
+   - Check CISA KEV catalog status for each CVE
+   - Calculate vulnerability trend and average patch time
+   - Note any unpatched critical/high severity issues
+
+3. **File/URL Security Analysis** (if applicable)
+   - If file hash provided: Use virustotal_scan tool
+   - If URL/domain provided: Use safe_browsing_check and observatory_scan tools
+   - Analyze results for security posture
+
+4. **Compliance & Certifications**
+   - SOC 2 Type II status (auditor, dates, scope)
+   - ISO 27001/27017/27018 certifications
+   - GDPR/CCPA/HIPAA compliance claims
+   - Industry-specific certifications
+
+5. **Vendor Reputation**
+   - Parent company and ownership structure
+   - Market presence and customer base
+   - PSIRT (Product Security Incident Response Team) presence
+   - Bug bounty program details (HackerOne, Bugcrowd, etc.)
+   - Security transparency score
+
+6. **Data Handling & Encryption**
+   - Encryption standards: in-transit (TLS version), at-rest (AES details)
+   - Key management options (EKM, BYOK)
+   - Backup encryption practices
+   - Data residency options (US, EU, etc.)
+   - Retention and portability policies
+
+7. **Privacy & Compliance Frameworks**
+   - GDPR compliance and DPA availability
+   - CCPA compliance
+   - HIPAA BAA availability
+   - Standard Contractual Clauses
+
+8. **Access & Admin Controls**
+   - Access controls: SSO/SAML, MFA/2FA, SCIM, RBAC, session management (note plan availability)
+   - Admin controls: Audit logs, DLP integration, eDiscovery, retention policies, app management (note plan availability)
+   - Deployment recommendations for enterprise use
+
+9. **Incident History**
+   - Known breaches or security incidents (past 2-3 years)
+   - Response quality and timeline
+   - Public disclosure transparency
+
+10. **Alternative Recommendations**
+    - Identify 1-2 comparable alternatives with better security posture
+    - Justify recommendations with specific security advantages
+
+SOURCE PRIORITIZATION:
+- Independent sources FIRST: NVD/CVE databases, CISA KEV, SOC 2 audit reports, ISO certificates, security research, HackerOne
+- Vendor sources SECOND: Official security pages, white papers, terms of service, DPA, compliance documentation
+- Always label sources as "vendor" or "independent"
 
 Guidelines:
 1. Maximize Specificity and Detail
 - Include all known user preferences and explicitly list key attributes or dimensions to consider.
 - It is important that all details from the user are included in the instructions.
 
-2. Fill in Unstated But Necessary Dimensions as Open-Ended
-- If certain attributes are essential for a meaningful output but the user has not provided them, explicitly state that they are open-ended or default to no specific constraint.
-
-3. Avoid Unwarranted Assumptions
-- If the user has not provided a particular detail, do not invent one.
-- Instead, state the lack of specification and guide the researcher to treat it as flexible or accept all possible options.
-
-4. Use the First Person
+2. Use the First Person
 - Phrase the request from the perspective of the user.
 
-5. Sources
-- If specific sources should be prioritized, specify them in the research question.
-- For product and travel research, prefer linking directly to official or primary websites (e.g., official brand sites, manufacturer pages, or reputable e-commerce platforms like Amazon for user reviews) rather than aggregator sites or SEO-heavy blogs.
-- For academic or scientific queries, prefer linking directly to the original paper or official journal publication rather than survey papers or secondary summaries.
-- For people, try linking directly to their LinkedIn profile, or their personal website if they have one.
-- If the query is in a specific language, prioritize sources published in that language.
+3. For Non-Security Research
+- If this is NOT a security assessment, use standard research brief format focusing on the user's specific question.
 """
 
 lead_researcher_prompt = """You are a research supervisor conducting SECURITY ASSESSMENTS for CISOs. Your job is to conduct research by calling the "ConductResearch" tool. For context, today's date is {date}.
