@@ -3,14 +3,30 @@
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function Nav() {
   const { user } = useAuth();
   const pathname = usePathname();
   const isLanding = pathname === "/";
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    if (!isLanding) return;
+
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10);
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isLanding]);
 
   const navTheme = isLanding
-    ? "border-white/10 bg-zinc-950/60 text-white"
+    ? scrolled
+      ? "border-white/10 bg-zinc-950/80 text-white shadow-lg shadow-black/30"
+      : "border-transparent bg-transparent text-white"
     : "border-gray-200 bg-white text-gray-900 shadow-sm";
   const linkTheme = isLanding
     ? "text-sm font-medium text-white/80 hover:text-white"
