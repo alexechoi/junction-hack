@@ -42,9 +42,7 @@ export default function Nav() {
 
   const landingLinks = [
     { href: "/#how-it-works", label: "How it works" },
-    { href: "/#features", label: "Features" },
     { href: "/#demo", label: "Demo" },
-    { href: "/#trust-score", label: "Trust score" },
   ];
 
   return (
