@@ -934,9 +934,13 @@ export default function ReportDetailPage(props: ReportDetailPageProps) {
                           </span>
                         </div>
                         <div>
-                          <p className="font-medium text-white">{source.source}</p>
+                          <p className="font-medium text-white">
+                            {source.source}
+                          </p>
                           {source.notes && (
-                            <p className="mt-1 text-xs text-white/60">{source.notes}</p>
+                            <p className="mt-1 text-xs text-white/60">
+                              {source.notes}
+                            </p>
                           )}
                         </div>
                         <div className="flex flex-wrap items-center gap-3 text-xs text-white/50 md:justify-end">
