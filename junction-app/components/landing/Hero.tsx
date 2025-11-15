@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Shield, Sparkles } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 
 const stats = [
   {
@@ -27,7 +27,7 @@ export function Hero() {
   };
 
   return (
-    <section className="relative overflow-hidden px-6 pb-32 pt-24 md:pb-48 md:pt-32">
+    <section className="relative overflow-hidden px-6 pb-32 md:pb-48 md:pt-32">
       <div className="absolute inset-0 opacity-20">
         <div
           className="absolute inset-0"
@@ -43,13 +43,6 @@ export function Hero() {
       <div className="absolute bottom-0 left-0 h-[500px] w-[500px] rounded-full bg-blue-500 opacity-20 blur-[150px]" />
 
       <div className="relative mx-auto max-w-7xl">
-        <div className="mb-20 flex items-center gap-3">
-          <div className="flex size-10 items-center justify-center rounded-xl bg-white text-zinc-950 shadow-lg shadow-white/20">
-            <Shield className="size-6" strokeWidth={2} />
-          </div>
-          <span className="text-xl tracking-tight">Aegis</span>
-        </div>
-
         <div className="max-w-5xl">
           <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/80 backdrop-blur-sm">
             <Sparkles className="size-4 text-emerald-400" />
