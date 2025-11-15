@@ -315,7 +315,7 @@ export default function ResearchStreamModal({
             messages: [
               {
                 role: "user",
-                content: `Research the security and safety of: ${entityName}`,
+                content: `${entityName}`,
               },
             ],
           },
