@@ -59,14 +59,27 @@ Entity name or hash:`;
       );
     }
 
-    // Step 2: Query Firestore for existing entity (case-insensitive fuzzy match)
+    // Step 2: Check if the report already exists in cache
+    const entityNameLower = entityName.toLowerCase();
+    const cacheCollection = adminDb.collection("cache");
+    const directCacheDoc = await cacheCollection.doc(entityNameLower).get();
+
+    if (directCacheDoc.exists) {
+      const cachedData = directCacheDoc.data();
+      return Response.json({
+        found: true,
+        reportId: directCacheDoc.id,
+        cachedAt: cachedData?.cached_at || null,
+        entityName,
+      });
+    }
+
+    // Step 3: Query Firestore entities for case-insensitive fuzzy match
     const entitiesRef = adminDb.collection("entities");
     const snapshot = await entitiesRef.get();
 
-    let matchedEntity = null;
-    const entityNameLower = entityName.toLowerCase();
+    let matchedEntity: Record<string, any> | null = null;
 
-    // Try exact match first, then fuzzy match
     for (const doc of snapshot.docs) {
       const data = doc.data();
       const storedName = data.name?.toLowerCase() || "";
@@ -87,16 +100,35 @@ Entity name or hash:`;
       }
     }
 
-    // Step 3: If entity exists, return it
+    // Step 4: If entity maps to a cached report, return it
     if (matchedEntity) {
-      return Response.json({
-        found: true,
-        entity: matchedEntity,
-        entityName,
-      });
+      const possibleCacheIds = [
+        matchedEntity.cacheId,
+        matchedEntity.cache_id,
+        matchedEntity.cacheDocId,
+        matchedEntity.cache_doc_id,
+        matchedEntity.id,
+        matchedEntity.name,
+      ]
+        .filter(Boolean)
+        .map((value: string) => value.toLowerCase());
+
+      for (const cacheId of possibleCacheIds) {
+        const cacheDoc = await cacheCollection.doc(cacheId).get();
+        if (cacheDoc.exists) {
+          const cachedData = cacheDoc.data();
+          return Response.json({
+            found: true,
+            reportId: cacheDoc.id,
+            cachedAt: cachedData?.cached_at || null,
+            entityName,
+            entity: matchedEntity,
+          });
+        }
+      }
     }
 
-    // Step 4: Entity not found, return entity name for client to trigger deep_security
+    // Step 5: Entity not found in cache, return entity name for client to trigger deep_security
     // The client will call the deep_security endpoint
     return Response.json({
       found: false,

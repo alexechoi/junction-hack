@@ -1,7 +1,4 @@
-import { Github, Linkedin, Shield, Twitter } from "lucide-react";
-
-const productLinks = ["Documentation", "API", "Example reports", "Changelog"];
-const resourceLinks = ["Security", "Privacy", "Terms", "Support"];
+import { Github, Shield } from "lucide-react";
 
 export function LandingFooter() {
   return (
@@ -20,52 +17,23 @@ export function LandingFooter() {
               from reactive firefighting to proactive enablement.
             </p>
           </div>
-          <div>
-            <div className="text-sm uppercase tracking-wide text-zinc-500">
-              Product
-            </div>
-            <ul className="mt-4 space-y-2 text-sm text-zinc-400">
-              {productLinks.map((link) => (
-                <li key={link}>
-                  <a href="#" className="transition hover:text-white">
-                    {link}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <div className="text-sm uppercase tracking-wide text-zinc-500">
-              Resources
-            </div>
-            <ul className="mt-4 space-y-2 text-sm text-zinc-400">
-              {resourceLinks.map((link) => (
-                <li key={link}>
-                  <a href="#" className="transition hover:text-white">
-                    {link}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
         </div>
 
         <div className="mt-12 flex flex-col gap-6 border-t border-white/10 pt-8 text-sm text-zinc-500 md:flex-row md:items-center md:justify-between">
           <span>Built for the WithSecure GenAI Security Challenge</span>
           <div className="flex items-center gap-4">
-            {[
-              { icon: Github, label: "GitHub" },
-              { icon: Twitter, label: "Twitter" },
-              { icon: Linkedin, label: "LinkedIn" },
-            ].map(({ icon: Icon, label }) => (
-              <a
-                key={label}
-                href="#"
-                className="flex size-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 transition hover:border-white/20 hover:bg-white/10"
-              >
-                <Icon className="size-5" />
-              </a>
-            ))}
+            {[{ icon: Github, label: "GitHub" }].map(
+              ({ icon: Icon, label }) => (
+                <a
+                  key={label}
+                  target="_blank"
+                  href="https://github.com/alexechoi/junction-hack"
+                  className="flex size-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 transition hover:border-white/20 hover:bg-white/10"
+                >
+                  <Icon className="size-5" />
+                </a>
+              ),
+            )}
           </div>
         </div>
       </div>

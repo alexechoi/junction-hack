@@ -5,11 +5,14 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { FileUp, Loader, Upload, X } from "lucide-react";
 import ResearchStreamModal from "@/components/ResearchStreamModal";
+import { useSearchParams } from "next/navigation";
 
 export default function DashboardPage() {
   const { user } = useAuth();
   const router = useRouter();
-  const [query, setQuery] = useState("");
+  const searchParams = useSearchParams();
+  const issueParam = searchParams.get("issue") ?? "";
+  const [query, setQuery] = useState(issueParam);
   const [fileName, setFileName] = useState<string | null>(null);
   const [fileHash, setFileHash] = useState<string | null>(null);
   const [isCalculatingHash, setIsCalculatingHash] = useState(false);
@@ -20,10 +23,19 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (!user) {
-      router.push("/auth");
+      const redirectPath = issueParam
+        ? `/auth?issue=${encodeURIComponent(issueParam)}`
+        : "/auth";
+      router.push(redirectPath);
       return;
     }
-  }, [user, router]);
+  }, [user, router, issueParam]);
+
+  useEffect(() => {
+    if (issueParam) {
+      setQuery(issueParam);
+    }
+  }, [issueParam]);
 
   // Calculate SHA-256 hash from file using Web Crypto API
   const calculateSHA256 = async (file: File): Promise<string> => {
@@ -129,9 +141,21 @@ export default function DashboardPage() {
         throw new Error(data.error || "Failed to process request");
       }
 
-      // If entity was found in Firestore
+      // If entity/report was found in cache
       if (data.found) {
-        router.push(`/entity/${data.entity.id}`);
+        const reportId =
+          data.reportId ||
+          data.entity?.cacheId ||
+          data.entity?.cache_id ||
+          data.entity?.id ||
+          data.entityName?.toLowerCase();
+
+        if (reportId) {
+          router.push(`/reports/${encodeURIComponent(reportId)}`);
+          return;
+        }
+
+        console.warn("Research API indicated cached report but no report ID");
       } else {
         // Entity not found, open streaming modal
         setStreamingEntityName(data.entityName);
@@ -278,7 +302,9 @@ export default function DashboardPage() {
                     )}
                   </div>
                 ) : query.trim() ? (
-                  <span className="text-white/40">File upload disabled (text input active)</span>
+                  <span className="text-white/40">
+                    File upload disabled (text input active)
+                  </span>
                 ) : (
                   <span>No file selected</span>
                 )}
@@ -289,8 +315,10 @@ export default function DashboardPage() {
                       e.preventDefault();
                       setFileName(null);
                       setFileHash(null);
-                      const input = document.getElementById('file-upload') as HTMLInputElement;
-                      if (input) input.value = '';
+                      const input = document.getElementById(
+                        "file-upload",
+                      ) as HTMLInputElement;
+                      if (input) input.value = "";
                     }}
                     className="flex items-center gap-2 text-red-400 hover:text-red-300"
                   >
