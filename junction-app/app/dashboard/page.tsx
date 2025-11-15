@@ -16,6 +16,7 @@ export default function DashboardPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showStreamModal, setShowStreamModal] = useState(false);
   const [streamingEntityName, setStreamingEntityName] = useState("");
+  const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
     if (!user) {
@@ -33,6 +34,69 @@ export default function DashboardPage() {
       .map((byte) => byte.toString(16).padStart(2, "0"))
       .join("");
     return hashHex;
+  };
+
+  // Process file and calculate hash
+  const processFile = async (file: File) => {
+    setFileName(file.name);
+    setIsCalculatingHash(true);
+
+    try {
+      const hash = await calculateSHA256(file);
+      setFileHash(hash);
+
+      // Send hash directly to the deep security agent
+      // Skip the research API and open streaming modal immediately
+      setStreamingEntityName(hash);
+      setShowStreamModal(true);
+
+      // Clear the file selection
+      setFileName(null);
+      setFileHash(null);
+    } catch (error) {
+      console.error("Error calculating file hash:", error);
+      alert("Failed to calculate file hash. Please try again.");
+      setFileName(null);
+      setFileHash(null);
+    } finally {
+      setIsCalculatingHash(false);
+    }
+  };
+
+  // Handle drag and drop events
+  const handleDragEnter = (event: React.DragEvent<HTMLLabelElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    if (!query.trim()) {
+      setIsDragging(true);
+    }
+  };
+
+  const handleDragOver = (event: React.DragEvent<HTMLLabelElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+  };
+
+  const handleDragLeave = (event: React.DragEvent<HTMLLabelElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDrop = async (event: React.DragEvent<HTMLLabelElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setIsDragging(false);
+
+    if (query.trim()) {
+      return; // Don't process if text input is active
+    }
+
+    const files = event.dataTransfer.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+      await processFile(file);
+    }
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -121,29 +185,7 @@ export default function DashboardPage() {
       return;
     }
 
-    setFileName(file.name);
-    setIsCalculatingHash(true);
-
-    try {
-      const hash = await calculateSHA256(file);
-      setFileHash(hash);
-
-      // Send hash directly to the deep security agent
-      // Skip the research API and open streaming modal immediately
-      setStreamingEntityName(hash);
-      setShowStreamModal(true);
-
-      // Clear the file selection
-      setFileName(null);
-      setFileHash(null);
-    } catch (error) {
-      console.error("Error calculating file hash:", error);
-      alert("Failed to calculate file hash. Please try again.");
-      setFileName(null);
-      setFileHash(null);
-    } finally {
-      setIsCalculatingHash(false);
-    }
+    await processFile(file);
   };
 
   return (
@@ -195,10 +237,16 @@ export default function DashboardPage() {
 
             <label
               htmlFor="file-upload"
-              className={`flex flex-col gap-4 rounded-2xl border border-dashed border-white/20 bg-white/5 p-6 transition ${
+              onDragEnter={handleDragEnter}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              className={`flex flex-col gap-4 rounded-2xl border-2 border-dashed p-6 transition-all ${
                 query.trim()
-                  ? "cursor-not-allowed opacity-50"
-                  : "cursor-pointer hover:border-white/40 hover:bg-white/10"
+                  ? "cursor-not-allowed border-white/20 bg-white/5 opacity-50"
+                  : isDragging
+                    ? "cursor-copy border-emerald-400 bg-emerald-500/20 scale-[1.02]"
+                    : "cursor-pointer border-white/20 bg-white/5 hover:border-white/40 hover:bg-white/10"
               }`}
             >
               <div className="flex items-center gap-4">
