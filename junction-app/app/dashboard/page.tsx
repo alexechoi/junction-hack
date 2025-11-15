@@ -54,9 +54,7 @@ export default function DashboardPage() {
       <div className="max-w-3xl mx-auto">
         <div className="bg-white shadow rounded-lg">
           <div className="px-4 py-5 sm:p-6">
-            <h1 className="text-2xl font-bold text-gray-900 mb-6">
-              Dashboard
-            </h1>
+            <h1 className="text-2xl font-bold text-gray-900 mb-6">Dashboard</h1>
 
             <div className="space-y-4">
               <div>
@@ -80,10 +78,15 @@ export default function DashboardPage() {
                     <p className="text-sm text-gray-600">
                       <span className="font-medium">Member since:</span>{" "}
                       {(() => {
-                        const dateValue = userData.createdAt instanceof Date
-                          ? userData.createdAt
-                          : (userData.createdAt as { toDate?: () => Date }).toDate?.();
-                        return dateValue ? new Date(dateValue).toLocaleDateString() : '';
+                        const dateValue =
+                          userData.createdAt instanceof Date
+                            ? userData.createdAt
+                            : (
+                                userData.createdAt as { toDate?: () => Date }
+                              ).toDate?.();
+                        return dateValue
+                          ? new Date(dateValue).toLocaleDateString()
+                          : "";
                       })()}
                     </p>
                   )}
