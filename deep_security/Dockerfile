@@ -22,10 +22,11 @@ COPY . .
 
 RUN uv sync
 
-# Expose the LangGraph server port
-EXPOSE 2024
+# Expose the LangGraph server port (8080 for Cloud Run)
+EXPOSE 8080
 
 # Run langgraph dev server using uv run to execute in the venv
 # --host 0.0.0.0 allows external connections in Docker
-CMD ["uv", "run", "langgraph", "dev", "--allow-blocking", "--host", "0.0.0.0", "--port", "2024"]
+# Port 8080 is required by Cloud Run
+CMD ["uv", "run", "langgraph", "dev", "--allow-blocking", "--host", "0.0.0.0", "--port", "8080"]
 
