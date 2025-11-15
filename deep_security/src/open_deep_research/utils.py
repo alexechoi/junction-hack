@@ -363,10 +363,10 @@ async def get_all_tools(config: RunnableConfig):
         List of all configured and available tools for research operations
     """
     # Import tools here to avoid circular dependency
-    from open_deep_research.tools import cve_search, observatory_scan, think_tool
+    from open_deep_research.tools import cve_search, observatory_scan, think_tool, virustotal_scan
 
     # Start with core research tools
-    tools = [tool(ResearchComplete), think_tool, cve_search, observatory_scan]
+    tools = [tool(ResearchComplete), think_tool, cve_search, observatory_scan, virustotal_scan]
 
     # Add configured search tools
     configurable = Configuration.from_runnable_config(config)
@@ -724,3 +724,14 @@ def get_nvd_api_key(config: RunnableConfig):
         return api_keys.get("NVD_API_KEY")
     else:
         return os.getenv("NVD_API_KEY")
+
+def get_virustotal_api_key(config: RunnableConfig):
+    """Get VirusTotal API key from environment or config."""
+    should_get_from_config = os.getenv("GET_API_KEYS_FROM_CONFIG", "false")
+    if should_get_from_config.lower() == "true":
+        api_keys = config.get("configurable", {}).get("apiKeys", {})
+        if not api_keys:
+            return None
+        return api_keys.get("VIRUSTOTAL_API_KEY")
+    else:
+        return os.getenv("VIRUSTOTAL_API_KEY")
