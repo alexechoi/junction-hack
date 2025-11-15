@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
-import { FileUp, Loader, Upload } from "lucide-react";
+import { FileUp, Loader, Upload, X } from "lucide-react";
 import ResearchStreamModal from "@/components/ResearchStreamModal";
 
 export default function DashboardPage() {
@@ -11,6 +11,8 @@ export default function DashboardPage() {
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [fileName, setFileName] = useState<string | null>(null);
+  const [fileHash, setFileHash] = useState<string | null>(null);
+  const [isCalculatingHash, setIsCalculatingHash] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showStreamModal, setShowStreamModal] = useState(false);
   const [streamingEntityName, setStreamingEntityName] = useState("");
@@ -22,9 +24,29 @@ export default function DashboardPage() {
     }
   }, [user, router]);
 
+  // Calculate SHA-256 hash from file using Web Crypto API
+  const calculateSHA256 = async (file: File): Promise<string> => {
+    const arrayBuffer = await file.arrayBuffer();
+    const hashBuffer = await crypto.subtle.digest("SHA-256", arrayBuffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray
+      .map((byte) => byte.toString(16).padStart(2, "0"))
+      .join("");
+    return hashHex;
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!query.trim() && !fileName) return;
+
+    // Use hash if file was uploaded, otherwise use query text
+    const messageToSend = fileHash || query.trim();
+
+    // Validate that we have something to send
+    if (!messageToSend) {
+      alert("Please enter a query or upload a file");
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -34,7 +56,7 @@ export default function DashboardPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ message: query }),
+        body: JSON.stringify({ message: messageToSend }),
       });
 
       const data = await response.json();
@@ -51,6 +73,11 @@ export default function DashboardPage() {
         setStreamingEntityName(data.entityName);
         setShowStreamModal(true);
       }
+
+      // Clear form after successful submission
+      setQuery("");
+      setFileName(null);
+      setFileHash(null);
     } catch (error) {
       console.error("Error submitting query:", error);
       alert(
@@ -84,9 +111,39 @@ export default function DashboardPage() {
     router.push("/reports");
   };
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const file = event.target.files?.[0];
-    setFileName(file ? file.name : null);
+    if (!file) {
+      setFileName(null);
+      setFileHash(null);
+      return;
+    }
+
+    setFileName(file.name);
+    setIsCalculatingHash(true);
+
+    try {
+      const hash = await calculateSHA256(file);
+      setFileHash(hash);
+
+      // Send hash directly to the deep security agent
+      // Skip the research API and open streaming modal immediately
+      setStreamingEntityName(hash);
+      setShowStreamModal(true);
+
+      // Clear the file selection
+      setFileName(null);
+      setFileHash(null);
+    } catch (error) {
+      console.error("Error calculating file hash:", error);
+      alert("Failed to calculate file hash. Please try again.");
+      setFileName(null);
+      setFileHash(null);
+    } finally {
+      setIsCalculatingHash(false);
+    }
   };
 
   return (
@@ -122,7 +179,8 @@ export default function DashboardPage() {
                   value={query}
                   onChange={(event) => setQuery(event.target.value)}
                   placeholder="e.g. Slack, notion.so, AWS S3, or describe the artifact you want assessed."
-                  className="h-40 w-full resize-none rounded-2xl border border-white/10 bg-black/50 p-6 text-lg text-white placeholder:text-white/40 focus:outline-none focus:ring-1 focus:ring-emerald-400"
+                  disabled={!!fileHash || isCalculatingHash}
+                  className="h-40 w-full resize-none rounded-2xl border border-white/10 bg-black/50 p-6 text-lg text-white placeholder:text-white/40 focus:outline-none focus:ring-1 focus:ring-emerald-400 disabled:cursor-not-allowed disabled:opacity-50"
                 />
                 <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/5 px-4 py-3 text-sm text-white/60">
                   <span>
@@ -137,7 +195,11 @@ export default function DashboardPage() {
 
             <label
               htmlFor="file-upload"
-              className="flex cursor-pointer flex-col gap-4 rounded-2xl border border-dashed border-white/20 bg-white/5 p-6 transition hover:border-white/40 hover:bg-white/10"
+              className={`flex flex-col gap-4 rounded-2xl border border-dashed border-white/20 bg-white/5 p-6 transition ${
+                query.trim()
+                  ? "cursor-not-allowed opacity-50"
+                  : "cursor-pointer hover:border-white/40 hover:bg-white/10"
+              }`}
             >
               <div className="flex items-center gap-4">
                 <div className="flex size-12 items-center justify-center rounded-2xl bg-white/10">
@@ -153,17 +215,53 @@ export default function DashboardPage() {
                 </div>
               </div>
               <div className="flex items-center justify-between text-sm text-white/60">
-                <span>{fileName ?? "No file selected"}</span>
-                <div className="flex items-center gap-2 text-emerald-400">
-                  <FileUp className="size-4" />
-                  <span>Attach file</span>
-                </div>
+                {isCalculatingHash ? (
+                  <div className="flex items-center gap-2">
+                    <Loader className="size-4 animate-spin" />
+                    <span>Calculating hash...</span>
+                  </div>
+                ) : fileName ? (
+                  <div className="flex flex-col gap-1">
+                    <span className="text-white">{fileName}</span>
+                    {fileHash && (
+                      <span className="font-mono text-xs text-emerald-400">
+                        SHA-256: {fileHash.substring(0, 16)}...
+                      </span>
+                    )}
+                  </div>
+                ) : query.trim() ? (
+                  <span className="text-white/40">File upload disabled (text input active)</span>
+                ) : (
+                  <span>No file selected</span>
+                )}
+                {fileName ? (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setFileName(null);
+                      setFileHash(null);
+                      const input = document.getElementById('file-upload') as HTMLInputElement;
+                      if (input) input.value = '';
+                    }}
+                    className="flex items-center gap-2 text-red-400 hover:text-red-300"
+                  >
+                    <X className="size-4" />
+                    <span>Clear</span>
+                  </button>
+                ) : (
+                  <div className="flex items-center gap-2 text-emerald-400">
+                    <FileUp className="size-4" />
+                    <span>Attach file</span>
+                  </div>
+                )}
               </div>
               <input
                 id="file-upload"
                 type="file"
                 accept=".exe,.msi,.zip,.dmg,.pkg,.deb,.rpm"
                 onChange={handleFileChange}
+                disabled={!!query.trim()}
                 className="hidden"
               />
             </label>
@@ -171,13 +269,22 @@ export default function DashboardPage() {
             <div className="flex flex-wrap items-center gap-4">
               <button
                 type="submit"
-                disabled={isSubmitting || (!query.trim() && !fileName)}
+                disabled={
+                  isSubmitting ||
+                  isCalculatingHash ||
+                  (!query.trim() && !fileHash)
+                }
                 className="inline-flex h-14 items-center justify-center rounded-full bg-white px-8 text-base font-semibold text-zinc-950 transition hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {isSubmitting ? (
                   <>
                     <Loader className="mr-2 size-5 animate-spin" />
                     Processing
+                  </>
+                ) : isCalculatingHash ? (
+                  <>
+                    <Loader className="mr-2 size-5 animate-spin" />
+                    Calculating hash
                   </>
                 ) : (
                   "Start assessment"

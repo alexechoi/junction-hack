@@ -19,19 +19,24 @@ export async function POST(request: Request) {
       );
     }
 
-    // Step 1: Extract the primary entity using Gemini
-    const entityExtractionPrompt = `You are a helpful assistant that extracts the primary entity from a message.
-In this case the primary entity is expected to be a software, tool, package, or library that the user wants to know is safe or not.
+    // Step 1: Extract the primary entity or detect hash using Gemini
+    const entityExtractionPrompt = `You are a helpful assistant that extracts the primary entity from a message or detects file hashes.
 
 Message: ${message}
 
 Instructions:
+- First, check if the message is a file hash (SHA-256, SHA-1, or MD5):
+  * SHA-256: exactly 64 hexadecimal characters (0-9, a-f, A-F)
+  * SHA-1: exactly 40 hexadecimal characters (0-9, a-f, A-F)
+  * MD5: exactly 32 hexadecimal characters (0-9, a-f, A-F)
+- If the message is a hash, return it EXACTLY as provided, without any modifications
+- If the message is NOT a hash, extract the primary software/tool/package/library name
 - Extract ONLY the name of the primary software/tool/package
-- Return ONLY the entity name, nothing else
+- Return ONLY the entity name or hash, nothing else
 - If multiple entities are mentioned, return the primary one
 - Do not include version numbers, descriptions, or explanations
 
-Entity name:`;
+Entity name or hash:`;
 
     const result = await ai.models.generateContent({
       model: "gemini-2.0-flash-exp",
