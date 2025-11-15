@@ -242,6 +242,50 @@ export default function ReportDetailPage(props: ReportDetailPageProps) {
     "List any open compliance or audit gaps.",
     "Outline actions to improve the risk posture.",
   ];
+  const reportName = "Slack Technologies, LLC";
+
+  const handleExportPdf = () => {
+    if (typeof window === "undefined") return;
+    window.print();
+  };
+
+  const handleShare = async () => {
+    if (typeof window === "undefined") return;
+    const url = window.location.href;
+    const sharePayload = {
+      title: `${reportName} — Junction One report`,
+      text: `Review the latest trust assessment for ${reportName}.`,
+      url,
+    };
+
+    try {
+      if (typeof navigator !== "undefined" && navigator.share) {
+        await navigator.share(sharePayload);
+        return;
+      }
+
+      if (
+        typeof navigator !== "undefined" &&
+        navigator.clipboard &&
+        navigator.clipboard.writeText
+      ) {
+        await navigator.clipboard.writeText(url);
+        alert("Report link copied to clipboard.");
+        return;
+      }
+
+      window.prompt("Copy this link", url);
+    } catch (error) {
+      const isAbortError =
+        typeof error === "object" &&
+        error !== null &&
+        "name" in error &&
+        error.name === "AbortError";
+
+      if (isAbortError) return;
+      alert("Unable to share this report automatically. Please copy the link.");
+    }
+  };
 
   useEffect(() => {
     if (!user) {
@@ -331,11 +375,17 @@ export default function ReportDetailPage(props: ReportDetailPageProps) {
             Back to reports
           </Link>
           <div className="flex flex-wrap gap-3">
-            <button className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white transition hover:bg-white/10">
+            <button
+              onClick={handleShare}
+              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white transition hover:bg-white/10"
+            >
               <Share2 className="size-4" />
               Share
             </button>
-            <button className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-zinc-950 transition hover:bg-zinc-100">
+            <button
+              onClick={handleExportPdf}
+              className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-zinc-950 transition hover:bg-zinc-100"
+            >
               <Download className="size-4" />
               Export PDF
             </button>
@@ -355,7 +405,7 @@ export default function ReportDetailPage(props: ReportDetailPageProps) {
                   <div>
                     <div className="flex flex-wrap items-center gap-3">
                       <h1 className="text-4xl font-semibold tracking-tight">
-                        Slack Technologies, LLC
+                        {reportName}
                       </h1>
                       <span className="rounded-full border border-blue-500/30 bg-blue-500/20 px-3 py-1 text-sm text-blue-100">
                         Verified
