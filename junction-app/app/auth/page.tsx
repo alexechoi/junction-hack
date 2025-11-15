@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
 
 export default function AuthPage() {
@@ -16,15 +16,20 @@ export default function AuthPage() {
 
   const { user, signIn, signUp, signInWithGoogle } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const issueParam = searchParams.get("issue") ?? "";
+  const dashboardPath = issueParam
+    ? `/dashboard?issue=${encodeURIComponent(issueParam)}`
+    : "/dashboard";
   const inputClassName =
     "w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-base text-white placeholder:text-white/50 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/30 focus:outline-none";
 
   // if logged in, redirect to dashboard
   useEffect(() => {
     if (user) {
-      router.push("/dashboard");
+      router.push(dashboardPath);
     }
-  }, [user, router]);
+  }, [user, router, dashboardPath]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,7 +42,7 @@ export default function AuthPage() {
       } else {
         await signUp(email, password, firstName, lastName);
       }
-      router.push("/dashboard");
+      router.push(dashboardPath);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
@@ -51,7 +56,7 @@ export default function AuthPage() {
 
     try {
       await signInWithGoogle();
-      router.push("/dashboard");
+      router.push(dashboardPath);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "An error occurred");
     } finally {

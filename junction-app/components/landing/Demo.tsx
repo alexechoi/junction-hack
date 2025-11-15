@@ -8,6 +8,8 @@ import {
   Loader2,
   Search,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
 
 const securityHighlights = [
   {
@@ -55,12 +57,17 @@ const exampleApps = [
 export function Demo() {
   const [input, setInput] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const router = useRouter();
+  const { user } = useAuth();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!input.trim()) return;
+    const trimmedInput = input.trim();
+    if (!trimmedInput) return;
+
     setIsAnalyzing(true);
-    setTimeout(() => setIsAnalyzing(false), 1800);
+    const query = `?issue=${encodeURIComponent(trimmedInput)}`;
+    router.push(user ? `/dashboard${query}` : `/auth${query}`);
   };
 
   return (

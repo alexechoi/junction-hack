@@ -2,14 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { FileUp, Loader, Upload } from "lucide-react";
 import ResearchStreamModal from "@/components/ResearchStreamModal";
 
 export default function DashboardPage() {
   const { user } = useAuth();
   const router = useRouter();
-  const [query, setQuery] = useState("");
+  const searchParams = useSearchParams();
+  const issueParam = searchParams.get("issue") ?? "";
+  const [query, setQuery] = useState(issueParam);
   const [fileName, setFileName] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showStreamModal, setShowStreamModal] = useState(false);
@@ -17,10 +19,19 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (!user) {
-      router.push("/auth");
+      const redirectPath = issueParam
+        ? `/auth?issue=${encodeURIComponent(issueParam)}`
+        : "/auth";
+      router.push(redirectPath);
       return;
     }
-  }, [user, router]);
+  }, [user, router, issueParam]);
+
+  useEffect(() => {
+    if (issueParam) {
+      setQuery(issueParam);
+    }
+  }, [issueParam]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
